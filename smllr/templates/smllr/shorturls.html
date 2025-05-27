@@ -1,0 +1,62 @@
+{% extends 'smllr/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto">
+  <div class="flex flex-col max-w-128 mx-auto mt-8 border-1 border-gray-500 rounded-lg">
+    <div class="border-b-1 border-gray-500 px-6 py-4">
+      <h1 class="text-2xl text-gray-200">Shorten your URL</h1>
+    </div>
+    {{ form.non_field_errors }}
+    <div class="text-red-100">
+      {{ form.errors }}
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <div class="flex flex-col gap-8 py-4 px-6">
+        <div class="flex flex-col gap-2">
+          <label for="{{ form.destination_url.id_for_label }}" class="text-gray-200">Destination URL</label>
+          <input type="text" name="{{ form.destination_url.name }}" id="{{ form.destination_url.id_for_label }}"
+            class="px-4 py-2 border-1 border-gray-500 rounded-lg text-white"
+            placeholder="https://www.example.com/your-very-long-url" required>
+        </div>
+
+        <button type="submit"
+          class="px-6 py-4 bg-blue-900 hover:bg-blue-950 duration-300 rounded-md font-bold text-white">
+          Shorten it
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <table class="mx-auto table-auto text-left text-gray-500 mt-8 rounded-t-lg border-separate border-gray-900 w-full">
+    <thead class="bg-gray-900">
+      <tr>
+        <th class="px-6 py-3">Destination URL</th>
+        <th class="px-6 py-3">Short code</th>
+        <th class="px-6 py-3">Clicks</th>
+        <th class="px-6 py-3">Created at</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for shorturl in shorturls_list %}
+      <tr class="bg-gray-800">
+        <td class="px-6 py-4">{{ shorturl.destination_url }}</td>
+        <td class="px-6 py-4">
+          <a href="{% url 'shorturls_redirect' short_code=shorturl.short_code %}" class="text-blue-500 hover:underline">
+            {{ shorturl.short_code }}
+          </a>
+        </td>
+        <td class="px-6 py-4">{{ shorturl.clicks }}</td>
+        <td class="px-6 py-4">{{ shorturl.created_at }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center">No short URLs created yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
