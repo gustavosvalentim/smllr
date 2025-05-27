@@ -1,18 +1,20 @@
-FROM python:3.10-alpine
+FROM python:3.10-slim
 
 WORKDIR /app
 
 COPY pyproject.toml .
 COPY uv.lock .
 
-RUN apk add --no-cache gcc musl-dev libffi-dev linux-headers \
+RUN apt-get update -y \
+    && apt-get upgrade -y \
     && pip install --upgrade pip \
     && pip install uv \
-    && uv sync --locked
-
+    && uv sync --frozen --no-install-project --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"
 
 ADD . /app
 
-ENTRYPOINT 'scripts/entrypoint.sh'
+EXPOSE 8000
+
+ENTRYPOINT ["sh", "scripts/entrypoint.sh"]
