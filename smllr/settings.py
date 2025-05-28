@@ -97,8 +97,8 @@ if os.getenv('DATABASE_ENGINE') == 'postgresql':
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DATABASE_NAME', 'smllr'),
-        'USER': os.getenv('DATABASE_USER', 'smllr_user'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'smllr_password'),
+        'USER': os.getenv('DATABASE_USER', 'root'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'root'),
         'HOST': os.getenv('DATABASE_HOST', 'localhost'),
         'PORT': os.getenv('DATABASE_PORT', '5432'),
     }
