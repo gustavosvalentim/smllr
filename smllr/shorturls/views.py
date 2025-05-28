@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.http import HttpRequest, HttpResponseNotFound
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import FormView
 from smllr.shorturls.forms import ShortURLForm
@@ -84,3 +84,31 @@ class ShortURLFormView(FormView):
         short_url.save()
 
         return super().form_valid(form)
+
+
+class ShortURLAnalyticsView(View):
+    """
+    View to handle the analytics of short URLs.
+    """
+
+    def get(self, request: HttpRequest, short_code: str):
+        """
+        Returns the analytics data for the short URL based on the short code provided in the request.
+        """
+
+        short_url = ShortURL.objects.filter(short_code=short_code).first()
+        clicks = ShortURLClick.objects.filter(short_url=short_url).order_by('-clicked_at')
+
+        if not short_url:
+            return HttpResponseNotFound("Short URL was not found.")
+        
+        context = {
+            'shorturl': short_url,
+            'latest_clicks': clicks[:10],
+            'desktop_clicks': clicks.filter(device_type='Desktop').count(),
+            'mobile_clicks': clicks.filter(device_type='Mobile').count(),
+            'tablet_clicks': clicks.filter(device_type='Tablet').count(),
+            'total_clicks': clicks.count(),
+        }
+
+        return render(request, 'smllr/analytics.html', context)

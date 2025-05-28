@@ -1,0 +1,88 @@
+{% extends 'smllr/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto">
+  <h1 class="text-2xl text-white mb-4 border-b-1 py-2">{{ shorturl.short_code }}</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+    <div class="flex flex-col border-1 border-gray-600 rounded-lg">
+      <div class="border-b-1 border-gray-600 px-4 py-2 mb-2">
+        <h3 class="text-white font-bold text-lg">Latest clicks</h3>
+      </div>
+      <ul class="px-4 py-2">
+        {% for click in latest_clicks %}
+        <li class="flex justify-between items-center py-2">
+          <div>
+            <span class="text-white">{{ click.ip_address }} - {{ click.device_type }}</span>
+          </div>
+          <div>
+            <span class="text-white">{{ click.clicked_at }}</span>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="flex flex-col max-h-140 md:max-h-128 border-1 border-gray-600 rounded-lg">
+      <div class="border-b-1 border-gray-600 px-4 py-2 mb-2">
+        <h3 class="text-white font-bold text-lg">Clicks by platform</h3>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between">
+        <div class="w-full mr-24">
+          <ul class="px-4 py-2">
+            <li class="flex justify-between items-center py-2">
+              <span class="text-white">Total clicks</span>
+              <span class="text-white">{{ total_clicks }}</span>
+            </li>
+
+            <li class="flex justify-between items-center py-2">
+              <span class="text-white">Desktop clicks</span>
+              <span class="text-white">{{ desktop_clicks }}</span>
+            </li>
+
+            <li class="flex justify-between items-center py-2">
+              <span class="text-white">Mobile clicks</span>
+              <span class="text-white">{{ mobile_clicks }}</span>
+            </li>
+
+            <li class="flex justify-between items-center py-2">
+              <span class="text-white">Tablet clicks</span>
+              <span class="text-white">{{ tablet_clicks }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="max-w-96 md:mr-12 py-4">
+          <canvas id="chart-click-by-platform" class="max-h-96 mx-auto"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ctx = document.getElementById('chart-click-by-platform').getContext('2d');
+  const chartData = {
+    labels: ['Desktop', 'Mobile', 'Tablet'],
+    datasets: [{
+      label: 'Clicks by Platform',
+      data: ["{{ desktop_clicks }}", "{{ mobile_clicks }}", "{{ tablet_clicks }}"],
+      backgroundColor: [
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(255, 99, 132, 0.6)',
+        'rgba(255, 206, 86, 0.6)'
+      ],
+    }]
+  };
+
+  const chartConfig = {
+    type: 'pie',
+    data: chartData,
+  };
+
+  new Chart(ctx, chartConfig);
+</script>
+
+{% endblock %}

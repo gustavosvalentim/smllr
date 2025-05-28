@@ -3,8 +3,8 @@
 {% block content %}
 
 <div class="container mx-auto">
-  <div class="flex flex-col max-w-128 mx-auto mt-8 border-1 border-gray-500 rounded-lg">
-    <div class="border-b-1 border-gray-500 px-6 py-4">
+  <div class="flex flex-col max-w-128 mx-auto mt-8 border-1 border-gray-600 rounded-lg">
+    <div class="border-b-1 border-gray-600 px-6 py-4">
       <h1 class="text-2xl text-gray-200 font-bold">Shorten your URL</h1>
     </div>
     {% if form.non_field_errors %}
@@ -18,7 +18,7 @@
         <div class="flex flex-col gap-2">
           <label for="{{ form.destination_url.id_for_label }}" class="text-gray-200">Destination URL</label>
           <input type="text" name="{{ form.destination_url.name }}" id="{{ form.destination_url.id_for_label }}"
-            class="px-4 py-2 border-1 border-gray-500 rounded-lg text-white"
+            class="px-4 py-2 border-1 border-gray-600 rounded-lg text-white"
             placeholder="https://www.example.com/your-very-long-url" required>
           {% if form.destination_url.errors %}
           <div class="text-red-500">
@@ -52,7 +52,7 @@
         <tr class="bg-gray-800">
           <td class="px-6 py-4">{{ shorturl.destination_url }}</td>
           <td class="px-6 py-4">
-            <a href="{% url 'shorturls_redirect' short_code=shorturl.short_code %}"
+            <a href="{% url 'shorturls_analytics' short_code=shorturl.short_code %}"
               class="text-blue-500 hover:underline">
               {{ shorturl.short_code }}
             </a>
