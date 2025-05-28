@@ -47,8 +47,12 @@ class ShortURLFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['shorturls_list'] = ShortURL.objects.filter(
-            user=self.request.user_metadata.user).order_by('-created_at')
+
+        if self.request.user.pk is not None:
+            context['shorturls_list'] = ShortURL.objects.filter(user=self.request.user_metadata.user).order_by('-created_at')
+            context['user_picture'] = self.request.user_picture
+        else:
+            context['shorturls_list'] = ShortURL.objects.filter(user__ip_address=self.request.user_metadata.ip_address).order_by('-created_at')
 
         return context
 
@@ -58,9 +62,10 @@ class ShortURLFormView(FormView):
         """
 
         user = self.request.user_metadata.user
-        if not user:
+        if user.pk is None:
             # Create a new user if one does not exist
             user = User.objects.create(
+                username=self.request.user_metadata.ip_address,
                 ip_address=self.request.user_metadata.ip_address,
                 name='Anonymous',
                 is_anonymous=True,

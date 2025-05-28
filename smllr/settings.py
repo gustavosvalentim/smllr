@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 
 from pathlib import Path
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,6 +38,11 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'smllr.shorturls',
+    'smllr.users',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,7 +52,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'smllr.shorturls.middlewares.UserMetadataMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'smllr.shorturls.middlewares.UserMetadataMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'smllr.urls'
@@ -113,6 +123,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Custom user model
+
+AUTH_USER_MODEL = 'users.User'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -136,4 +151,44 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Short URL created by anonymous users limit
+
 MAX_SHORTURLS_PER_ANON_USER = 5
+
+# Django Allauth settings
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+        'FETCH_USERINFO' : True,
+        'APPS': [
+            {
+                'client_id': os.getenv('GOOGLE_CLIENT_ID', 'your-client-id'),
+                'secret': os.getenv('GOOGLE_CLIENT_SECRET', 'your-client-secret'),
+                'key': '',
+            }
+        ],
+    }
+}
+
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+
+SOCIALACCOUNT_ADAPTER = 'smllr.users.adapters.SocialAccountAdapter'
+
+ACCOUNT_ADAPTER = 'smllr.users.adapters.AccountAdapter'
+
+LOGIN_REDIRECT_URL = '/'
+
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+SOCIALACCOUNT_ONLY = True

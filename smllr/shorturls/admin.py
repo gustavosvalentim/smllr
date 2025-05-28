@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from smllr.shorturls.models import ShortURL, ShortURLClick
+
+
+admin.site.register(ShortURL)
+admin.site.register(ShortURLClick)
