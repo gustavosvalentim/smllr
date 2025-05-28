@@ -5,7 +5,7 @@
 <div class="container mx-auto">
   <div class="flex flex-col max-w-128 mx-auto mt-8 border-1 border-gray-500 rounded-lg">
     <div class="border-b-1 border-gray-500 px-6 py-4">
-      <h1 class="text-2xl text-gray-200">Shorten your URL</h1>
+      <h1 class="text-2xl text-gray-200 font-bold">Shorten your URL</h1>
     </div>
     {% if form.non_field_errors %}
     <div class="bg-red-500 text-white px-6 py-4">
@@ -37,34 +37,37 @@
     </form>
   </div>
 
-  <table class="mx-auto table-auto text-left text-gray-500 mt-8 rounded-t-lg border-separate border-gray-900 w-full">
-    <thead class="bg-gray-900">
-      <tr>
-        <th class="px-6 py-3">Destination URL</th>
-        <th class="px-6 py-3">Short code</th>
-        <th class="px-6 py-3">Clicks</th>
-        <th class="px-6 py-3">Created at</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for shorturl in shorturls_list %}
-      <tr class="bg-gray-800">
-        <td class="px-6 py-4">{{ shorturl.destination_url }}</td>
-        <td class="px-6 py-4">
-          <a href="{% url 'shorturls_redirect' short_code=shorturl.short_code %}" class="text-blue-500 hover:underline">
-            {{ shorturl.short_code }}
-          </a>
-        </td>
-        <td class="px-6 py-4">{{ shorturl.clicks }}</td>
-        <td class="px-6 py-4">{{ shorturl.created_at }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="4" class="text-center">No short URLs created yet.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="rounded-lg overflow-hidden border-gray-950 mt-8">
+    <table class="mx-auto text-left text-gray-500 w-full">
+      <thead class="bg-gray-900">
+        <tr>
+          <th class="px-6 py-3">Destination URL</th>
+          <th class="px-6 py-3">Short code</th>
+          <th class="px-6 py-3">Clicks</th>
+          <th class="px-6 py-3">Created at</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for shorturl in shorturls_list %}
+        <tr class="bg-gray-800">
+          <td class="px-6 py-4">{{ shorturl.destination_url }}</td>
+          <td class="px-6 py-4">
+            <a href="{% url 'shorturls_redirect' short_code=shorturl.short_code %}"
+              class="text-blue-500 hover:underline">
+              {{ shorturl.short_code }}
+            </a>
+          </td>
+          <td class="px-6 py-4">{{ shorturl.clicks }}</td>
+          <td class="px-6 py-4">{{ shorturl.created_at }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center">No short URLs created yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 
 {% endblock %}

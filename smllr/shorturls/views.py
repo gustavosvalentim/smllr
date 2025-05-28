@@ -3,24 +3,21 @@ from django.http import HttpRequest, HttpResponseNotFound
 from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import FormView
-from smllr.shorturls.analytics import RequestMetrics
 from smllr.shorturls.forms import ShortURLForm
-from smllr.shorturls.generator import generate_short_code
+from smllr.shorturls.helpers import generate_short_code
 from smllr.shorturls.models import ShortURL, ShortURLClick, User
 
 
 class ShortURLView(View):
 
     def __store_analytics_data(self, request: HttpRequest, short_url: ShortURL):
-        metrics = RequestMetrics.from_request(request)
-
         short_url.increment_clicks()
         short_url_click = ShortURLClick.objects.create(
             short_url=short_url,
-            user_agent=metrics.user_agent,
-            ip_address=metrics.ip_address,
-            device_type=metrics.device_type,
-            referrer=metrics.referrer,
+            user_agent=request.user_metadata.user_agent,
+            ip_address=request.user_metadata.ip_address,
+            device_type=request.user_metadata.device_type,
+            referrer=request.user_metadata.referrer,
         )
         short_url_click.save()
 
@@ -50,21 +47,21 @@ class ShortURLFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['shorturls_list'] = ShortURL.objects.all().order_by('-created_at')
+        context['shorturls_list'] = ShortURL.objects.filter(
+            user=self.request.user_metadata.user).order_by('-created_at')
+
         return context
 
-    def form_valid(self, form: ShortURLForm):
+    def form_valid(self, form: ShortURLForm, **kwargs):
         """
         If the form is valid, save the short URL and redirect to the success URL.
         """
 
-        metrics = RequestMetrics.from_request(self.request)
-
-        user = User.objects.filter(ip_address=metrics.ip_address).first()
+        user = self.request.user_metadata.user
         if not user:
             # Create a new user if one does not exist
             user = User.objects.create(
-                ip_address=metrics.ip_address,
+                ip_address=self.request.user_metadata.ip_address,
                 name='Anonymous',
                 is_anonymous=True,
             )
