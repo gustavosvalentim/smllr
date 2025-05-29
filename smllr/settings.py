@@ -73,7 +73,7 @@ ROOT_URLCONF = 'smllr.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'smllr/templates'],
+        'DIRS': [BASE_DIR / 'smllr' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,6 +85,8 @@ TEMPLATES = [
         },
     },
 ]
+
+STATIC_ROOT = BASE_DIR / 'static'
 
 WSGI_APPLICATION = 'smllr.wsgi.application'
 
