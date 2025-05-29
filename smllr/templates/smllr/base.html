@@ -43,8 +43,9 @@
       {% else %}
       <div class="flex gap-4">
         <div class="flex items-center">
-          {% if user_picture %}
-          <img src="{{ user_picture }}" alt="User picture" class="rounded-full max-w-11 border-2 border-blue-900">
+          {% if socialaccount.picture %}
+          <img src="{{ socialaccount.picture }}" alt="User picture"
+            class="rounded-full max-w-11 border-2 border-blue-900">
           {% else %}
           <span class="text-white px-2 py-2 bg-blue-900 rounded-full">
             {{user.first_name|slice:"0:1"}}{{user.last_name|slice:"0:1"}}

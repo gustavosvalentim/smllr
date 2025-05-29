@@ -50,7 +50,6 @@ class ShortURLFormView(FormView):
 
         if self.request.user.pk is not None:
             context['shorturls_list'] = ShortURL.objects.filter(user=self.request.user_metadata.user).order_by('-created_at')
-            context['user_picture'] = self.request.user_picture
         else:
             context['shorturls_list'] = ShortURL.objects.filter(user__ip_address=self.request.user_metadata.ip_address).order_by('-created_at')
 
