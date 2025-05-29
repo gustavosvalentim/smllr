@@ -34,6 +34,10 @@ DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 'yes']
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 
+# CSRF for production
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+
+
 # Application definition
 
 INSTALLED_APPS = [
