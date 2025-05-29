@@ -26,6 +26,8 @@ class UserMetadataMiddleware:
 
         if request.user.pk is not None:
             socialaccount = SocialAccount.objects.filter(user=request.user).first()
-            request.user_picture = socialaccount.extra_data.get("picture")
+
+            if socialaccount is not None:
+                request.user_picture = socialaccount.extra_data.get("picture")
 
         return self.get_response(request)
