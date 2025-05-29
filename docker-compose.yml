@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     env_file: .env
     environment:
+      DEBUG: ${DEBUG}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       DATABASE_ENGINE: ${DATABASE_ENGINE}
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
