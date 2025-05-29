@@ -33,6 +33,7 @@ DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', 'yes', '1']
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
+PUBLIC_URL = os.getenv('PUBLIC_URL', 'http://127.0.0.1:8000')
 
 # CSRF for production
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(',')

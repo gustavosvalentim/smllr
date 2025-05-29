@@ -45,20 +45,22 @@
           <th class="px-6 py-3">Short code</th>
           <th class="px-6 py-3">Clicks</th>
           <th class="px-6 py-3">Created at</th>
+          <th class="px-6 py-3">-</th>
         </tr>
       </thead>
       <tbody>
         {% for shorturl in shorturls_list %}
         <tr class="bg-gray-800">
           <td class="px-6 py-4">{{ shorturl.destination_url }}</td>
+          <td class="px-6 py-4">{{ public_url }}/{{ shorturl.short_code }}</td>
+          <td class="px-6 py-4">{{ shorturl.clicks }}</td>
+          <td class="px-6 py-4">{{ shorturl.created_at }}</td>
           <td class="px-6 py-4">
             <a href="{% url 'shorturls_analytics' short_code=shorturl.short_code %}"
               class="text-blue-500 hover:underline">
-              {{ shorturl.short_code }}
+              Dashboard
             </a>
           </td>
-          <td class="px-6 py-4">{{ shorturl.clicks }}</td>
-          <td class="px-6 py-4">{{ shorturl.created_at }}</td>
         </tr>
         {% empty %}
         <tr>
