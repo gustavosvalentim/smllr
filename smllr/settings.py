@@ -29,13 +29,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-o9r=_&sgxo@aagjyxh7%7pa=qiktyg-$-)e5s6zefg+m26v-42'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 'yes']
+DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', 'yes', '1']
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 
 # CSRF for production
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(',')
 
 
 # Application definition
@@ -79,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'smllr.shorturls.context_processors.settings_processor',
             ],
         },
     },
@@ -159,6 +160,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MAX_SHORTURLS_PER_ANON_USER = 5
 
 # Django Allauth settings
+
+ALLOW_SOCIAL_LOGIN = os.getenv('ALLOW_SOCIAL_LOGIN', 'True').lower() in ['true', 'yes', '1']
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
