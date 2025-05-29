@@ -22,6 +22,8 @@ services:
       - postgres
     depends_on:
       - postgres
+    volumes:
+      - /var/www/smllr:/app/static
 
   postgres:
     image: postgres:latest
