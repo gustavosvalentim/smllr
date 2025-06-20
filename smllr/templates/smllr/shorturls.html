@@ -45,7 +45,9 @@
           <th class="px-6 py-3">Short code</th>
           <th class="px-6 py-3">Clicks</th>
           <th class="px-6 py-3">Created at</th>
+          {% if user.is_authenticated %}
           <th class="px-6 py-3">-</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -55,12 +57,14 @@
           <td class="px-6 py-4">{{ public_url }}/{{ shorturl.short_code }}</td>
           <td class="px-6 py-4">{{ shorturl.clicks }}</td>
           <td class="px-6 py-4">{{ shorturl.created_at }}</td>
+          {% if user.is_authenticated %}
           <td class="px-6 py-4">
             <a href="{% url 'shorturls_analytics' short_code=shorturl.short_code %}"
               class="text-blue-500 hover:underline">
               Dashboard
             </a>
           </td>
+          {% endif %}
         </tr>
         {% empty %}
         <tr>

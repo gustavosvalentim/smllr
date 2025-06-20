@@ -32,14 +32,10 @@
     <div class="flex items-center justify-between gap-8 mx-auto container">
       <a href="{% url 'shorturls_form' %}" class="text-2xl font-semibold text-white">Smllr</a>
       {% if not user.is_authenticated %}
-      {% if allow_social_login %}
-      <a href="{% provider_login_url 'google' process='login' %}"
+      <button data-modal-target="sign-in-modal" data-modal-toggle="sign-in-modal"
         class="bg-blue-900 hover:bg-blue-950 duration-300 rounded-full text-white px-4 py-2">
         Sign in
-      </a>
-      {% else %}
-      <a href="#" class="bg-blue-900 hover:bg-blue-950 duration-300 rounded-full text-white px-4 py-2">Sign in</a>
-      {% endif %}
+      </button>
       {% else %}
       <div class="flex gap-4">
         <div class="flex items-center">
@@ -73,6 +69,54 @@
       &copy; 2025 Smllr. All rights reserved.
     </div>
   </footer>
+
+  <div id="sign-in-modal" tabindex="-1" aria-hidden="true"
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 bottom-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100% - 1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-xl max-h-full">
+      <div class="relative mx-auto my-auto bg-gray-950 rounded-lg border-1 border-gray-300 shadow-lg">
+        <div class="border-b-1 border-gray-900">
+          <h2 class="text-2xl text-white px-6 py-2">SignIn</h2>
+        </div>
+        <div class="mt-2 flex flex-col items-center justify-center p-6">
+          <p class="text-gray-300 mb-4">Sign in to your account to continue.</p>
+          <div class="flex flex-col gap-4 w-full">
+            {% if allow_social_login %}
+            <a href="{% provider_login_url 'google' process='login' %}"
+              class="bg-white text-gray-800 hover:bg-gray-200 duration-300 rounded-full px-4 py-2 text-center">
+              Sign in with Google
+            </a>
+            {% else %}
+            <p class="text-red-500">Social account not configured.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    // Function to toggle the modal visibility
+    function toggleModal() {
+      const modal = document.getElementById('sign-in-modal');
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    // Add event listeners to buttons that open the modal
+    document.querySelectorAll('[data-modal-target]').forEach(button => {
+      button.addEventListener('click', () => {
+        toggleModal();
+      });
+    });
+
+    // Close the modal when clicking outside of it
+    window.addEventListener('click', (event) => {
+      const modal = document.getElementById('sign-in-modal');
+      if (event.target === modal) {
+        toggleModal();
+      }
+    });
+  </script>
 </body>
 
 </html>
