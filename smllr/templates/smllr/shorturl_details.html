@@ -3,21 +3,21 @@
 {% block content %}
 
 <div class="container mx-auto">
-  <h1 class="text-2xl text-white mb-4 border-b-1 py-2">{{ shorturl.short_code }}</h1>
+  {% include 'smllr/partials/shorturl_details_pane.html' %}
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-    <div class="flex flex-col border-1 border-gray-600 rounded-lg">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-4">
+    <div class="flex flex-col border-1 border-gray-600 rounded-lg overflow-x-hidden overflow-y-auto">
       <div class="border-b-1 border-gray-600 px-4 py-2 mb-2">
-        <h3 class="text-white font-bold text-lg">Latest clicks</h3>
+        <h3 class="font-bold text-lg">Latest clicks</h3>
       </div>
       <ul class="px-4 py-2">
         {% for click in latest_clicks %}
         <li class="flex justify-between items-center py-2">
           <div>
-            <span class="text-white">{{ click.ip_address }} - {{ click.device_type }}</span>
+            <span>{{ click.ip_address }} - {{ click.device_type }}</span>
           </div>
           <div>
-            <span class="text-white">{{ click.clicked_at }}</span>
+            <span>{{ click.clicked_at }}</span>
           </div>
         </li>
         {% endfor %}
@@ -26,30 +26,30 @@
 
     <div class="flex flex-col max-h-140 md:max-h-128 border-1 border-gray-600 rounded-lg">
       <div class="border-b-1 border-gray-600 px-4 py-2 mb-2">
-        <h3 class="text-white font-bold text-lg">Clicks by platform</h3>
+        <h3 class="font-bold text-lg">Clicks by platform</h3>
       </div>
 
       <div class="flex flex-col md:flex-row justify-between">
         <div class="w-full mr-24">
           <ul class="px-4 py-2">
             <li class="flex justify-between items-center py-2">
-              <span class="text-white">Total clicks</span>
-              <span class="text-white">{{ total_clicks }}</span>
+              <span>Total clicks</span>
+              <span>{{ total_clicks }}</span>
             </li>
 
             <li class="flex justify-between items-center py-2">
-              <span class="text-white">Desktop clicks</span>
-              <span class="text-white">{{ desktop_clicks }}</span>
+              <span>Desktop clicks</span>
+              <span>{{ desktop_clicks }}</span>
             </li>
 
             <li class="flex justify-between items-center py-2">
-              <span class="text-white">Mobile clicks</span>
-              <span class="text-white">{{ mobile_clicks }}</span>
+              <span>Mobile clicks</span>
+              <span>{{ mobile_clicks }}</span>
             </li>
 
             <li class="flex justify-between items-center py-2">
-              <span class="text-white">Tablet clicks</span>
-              <span class="text-white">{{ tablet_clicks }}</span>
+              <span>Tablet clicks</span>
+              <span>{{ tablet_clicks }}</span>
             </li>
           </ul>
         </div>

@@ -12,4 +12,4 @@ class ShortURLForm(forms.ModelForm):
 
     class Meta:
         model = ShortURL
-        fields = ['destination_url', 'short_code']
+        fields = ['name', 'destination_url', 'short_code']

@@ -5,7 +5,7 @@
 ## 🚀 Features
 
 - 🔗 Simple and fast link shortening
-- 📊 Click analytics and tracking (premium) - TBD
+- 📊 Click analytics and tracking (premium)
 - 🧷 Branded short URLs (premium) - TBD
 - 🌐 Support for custom domains - TBD
 - 📱 QR code generation (premium) - TBD

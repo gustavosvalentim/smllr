@@ -2,7 +2,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.shortcuts import redirect
 
-from smllr.shorturls.helpers import get_ip_address
+from smllr.shorturls.tracking import get_ip_address
 
 
 class AccountAdapter(DefaultAccountAdapter):

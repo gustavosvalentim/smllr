@@ -1,0 +1,30 @@
+<div class="flex flex-col items-start border-b-1 border-gray-600 pt-2 pb-8">
+  <h1 class="text-2xl">{{ shorturl.name|default:shorturl.short_code }}</h1>
+  <div class="grid grid-cols-3 gap-12 w-full">
+
+    <div class="flex flex-col gap-8 mt-2">
+      <div class="flex flex-col justify-between gap-1">
+        <span class="text-gray-500 font-bold text-md">Code</span>
+        <span class="text-md">{{ shorturl.short_code }}</span>
+      </div>
+      <div class="flex flex-col justify-between gap-1">
+        <span class="text-gray-500 font-bold text-md">Destination</span>
+        <a class="hover:underline" href="{{ shorturl.destination_url }}">
+          {{ shorturl.destination_url }}
+        </a>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-8 mt-2">
+      <div class="flex flex-col justify-between gap-1">
+        <span class="text-gray-500 font-bold text-md">Created at</span>
+        <span class="text-md">{{ shorturl.created_at }}</span>
+      </div>
+      <div class="flex flex-col justify-between gap-1">
+        <span class="text-gray-500 font-bold text-md">Total clicks</span>
+        <span class="text-md">{{ total_clicks }}</span>
+      </div>
+    </div>
+
+  </div>
+</div>

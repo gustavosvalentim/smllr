@@ -1,7 +1,8 @@
 from allauth.socialaccount.models import SocialAccount
+from django.conf import settings
 
 
-def user_social_account(request):
+def social_account(request):
     context = {
         'socialaccount': {}
     }
@@ -16,5 +17,13 @@ def user_social_account(request):
     return {
         'socialaccount': {
             'picture': socialaccount.extra_data.get('picture')
+        }
+    }
+
+
+def feature_toggle(request):
+    return {
+        'feature_toggle': {
+            'allow_social_login': settings.ALLOW_SOCIAL_LOGIN,
         }
     }

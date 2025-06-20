@@ -42,6 +42,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,
 # Application definition
 
 INSTALLED_APPS = [
+    'smllr.core',
     'smllr.shorturls',
     'smllr.users',
     'allauth',
@@ -80,8 +81,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'smllr.shorturls.context_processors.feature_settings',
-                'smllr.users.context_processors.user_social_account',
+                'smllr.shorturls.context_processors.conf',
+                'smllr.users.context_processors.social_account',
+                'smllr.users.context_processors.feature_toggle',
             ],
         },
     },
@@ -164,6 +166,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Short URL created by anonymous users limit
 
 MAX_SHORTURLS_PER_ANON_USER = 5
+
+SHORTURL_EXPIRATION_TIME_DAYS = int(os.getenv('SHORTURL_EXPIRATION_TIME_DAYS', 30))
 
 # Django Allauth settings
 

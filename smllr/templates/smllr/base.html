@@ -4,6 +4,8 @@
 <html lang="en" class="dark">
 
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Smllr{% endblock %}</title>
@@ -25,15 +27,35 @@
   * {
     font-family: 'Roboto', sans-serif;
   }
+
+  .bg-primary {
+    background-color: #3B82F6;
+  }
+
+  .bg-primary:hover {
+    background-color: #2563EB;
+  }
+
+  .text-primary {
+    color: #3B82F6;
+  }
+
+  .text-primary:hover {
+    color: #2563EB;
+  }
+
+  .border-primary {
+    border-color: #3B82F6;
+  }
 </style>
 
-<body class="bg-gray-950 flex flex-col min-h-screen">
-  <nav class="p-4 ">
+<body class="flex flex-col min-h-screen">
+  <nav class="p-4 shadow-md">
     <div class="flex items-center justify-between gap-8 mx-auto container">
-      <a href="{% url 'shorturls_form' %}" class="text-2xl font-semibold text-white">Smllr</a>
+      <a href="{% url 'shorturls_form' %}" class="text-2xl font-semibold">Smllr</a>
       {% if not user.is_authenticated %}
       <button data-modal-target="sign-in-modal" data-modal-toggle="sign-in-modal"
-        class="bg-blue-900 hover:bg-blue-950 duration-300 rounded-full text-white px-4 py-2">
+        class="bg-primary duration-300 rounded-full text-white px-4 py-2">
         Sign in
       </button>
       {% else %}
@@ -41,9 +63,9 @@
         <div class="flex items-center">
           {% if socialaccount.picture %}
           <img src="{{ socialaccount.picture }}" alt="User picture"
-            class="rounded-full max-w-11 border-2 border-blue-900">
+            class="rounded-full max-w-11 border-2 border-primary">
           {% else %}
-          <span class="text-white px-2 py-2 bg-blue-900 rounded-full">
+          <span class="text-white px-2 py-2 bg-primary rounded-full">
             {{user.first_name|slice:"0:1"}}{{user.last_name|slice:"0:1"}}
           </span>
           {% endif %}
@@ -51,15 +73,14 @@
 
         <form method="post" action="{% url 'account_logout' %}">
           {% csrf_token %}
-          <button type="submit"
-            class="bg-blue-900 hover:bg-blue-950 duration-300 rounded-full text-white px-4 py-2">Sign
+          <button type="submit" class="bg-primary duration-300 rounded-full text-white px-4 py-2">Sign
             out</button>
         </form>
       </div>
       {% endif %}
   </nav>
 
-  <main class="mt-8 grow">
+  <main class="mt-2 grow">
     {% block content %}
     {% endblock %}
   </main>
@@ -74,16 +95,13 @@
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 bottom-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100% - 1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-xl max-h-full">
       <div class="relative mx-auto my-auto bg-gray-950 rounded-lg border-1 border-gray-300 shadow-lg">
-        <div class="border-b-1 border-gray-900">
-          <h2 class="text-2xl text-white px-6 py-2">SignIn</h2>
-        </div>
-        <div class="mt-2 flex flex-col items-center justify-center p-6">
-          <p class="text-gray-300 mb-4">Sign in to your account to continue.</p>
+        <h2 class="text-2xl text-white px-6 py-3 text-center">Sign in to your account</h2>
+        <div class="flex flex-col items-center justify-center p-6">
           <div class="flex flex-col gap-4 w-full">
-            {% if allow_social_login %}
+            {% if feature_toggle.allow_social_login %}
             <a href="{% provider_login_url 'google' process='login' %}"
               class="bg-white text-gray-800 hover:bg-gray-200 duration-300 rounded-full px-4 py-2 text-center">
-              Sign in with Google
+              Continue with Google
             </a>
             {% else %}
             <p class="text-red-500">Social account not configured.</p>
