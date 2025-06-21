@@ -84,7 +84,9 @@ class ShortURLFormView(FormView):
                 form.add_error(None, f"You have reached the limit of {settings.MAX_SHORTURLS_PER_ANON_USER} URLs.")
                 return self.form_invalid(form)
 
-        if not form.cleaned_data['short_code'] or form.cleaned_data['short_code'].strip() == '':
+        short_code = form.cleaned_data.get('short_code', '').strip()
+
+        if short_code == '':
             # Generate a short code if not provided
             form.cleaned_data['short_code'] = generate_short_code()
 

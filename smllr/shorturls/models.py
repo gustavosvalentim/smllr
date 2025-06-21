@@ -35,4 +35,4 @@ class ShortURLClick(models.Model):
     referrer = models.URLField(blank=True, null=True)
 
     def __str__(self):
-        return f"Click on {self.short_url.short_code} at {self.clicked_at}"
+        return f"Click on {self.short_url.short_code} from {self.device_type} at {self.clicked_at}"

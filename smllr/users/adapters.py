@@ -1,7 +1,5 @@
-from allauth.account.views import ImmediateHttpResponse
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-from django.http import HttpResponse
 from django.shortcuts import redirect
 
 from smllr.shorturls.tracking import get_ip_address
