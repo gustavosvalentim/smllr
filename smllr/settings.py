@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -188,9 +189,22 @@ SOCIALACCOUNT_PROVIDERS = {
             {
                 'client_id': os.getenv('GOOGLE_CLIENT_ID', 'your-client-id'),
                 'secret': os.getenv('GOOGLE_CLIENT_SECRET', 'your-client-secret'),
-                'key': '',
             }
         ],
+    },
+    'github': {
+        'SCOPE': [
+            'read:user',
+            'user:email',
+        ],
+        'OAUTH_PKCE_ENABLED': True,
+        'FETCH_USERINFO' : True,
+        'APPS': [
+            {
+                'client_id': os.getenv('GITHUB_CLIENT_ID', 'your-client-id'),
+                'secret': os.getenv('GITHUB_CLIENT_SECRET', 'your-client-secret'),
+            }
+        ]
     }
 }
 

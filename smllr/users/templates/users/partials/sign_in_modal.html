@@ -1,0 +1,59 @@
+{% load socialaccount %}
+
+<div id="blur-overlay" class="absolute z-40 hidden backdrop-blur-xs w-full h-full bg-gray-600/60"></div>
+<div id="sign-in-modal" tabindex="-1" aria-hidden="true"
+  class="hidden overflow-y-auto overflow-x-hidden fixed md:top-50 right-0 left-0 z-50 justify-center items-center w-full h-[calc(100% - 1rem)] max-h-full">
+  <div class="relative p-4 w-full max-w-xl max-h-full">
+    <div class="relative mx-auto my-auto bg-white rounded-lg border-1 border-gray-300 shadow-md shadow-gray-800/50">
+      <h2 class="text-2xl px-6 py-3 text-center">Sign in to your account</h2>
+      <div class="flex flex-col items-center justify-center p-6">
+        <div class="flex flex-col gap-4 w-full">
+          {% if feature_toggle.allow_social_login %}
+          <div class="flex justify-center">
+            <a href="{% provider_login_url 'google' process='login' %}"
+              class="bg-blue-500 hover:bg-blue-600 text-white duration-300 rounded-full px-12 py-2 text-center">
+              <i class="fa-brands fa-google mr-2"></i>
+              Continue with Google
+            </a>
+          </div>
+
+          <div class="flex justify-center">
+            <a href="{% provider_login_url 'github' process='login' %}"
+              class="bg-gray-800 hover:bg-gray-900 text-white duration-300 rounded-full px-12 py-2 text-center">
+              <i class="fa-brands fa-github mr-2"></i>
+              Continue with GitHub
+            </a>
+          </div>
+          {% else %}
+          <p class="text-red-500">Social account not configured.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  // Function to toggle the modal visibility
+  function toggleModal(elementId) {
+    const modal = document.getElementById(elementId);
+    const overlay = document.getElementById('blur-overlay');
+
+    overlay.classList.toggle('hidden');
+
+    modal.classList.toggle('hidden');
+    modal.classList.toggle('flex');
+  }
+
+  // Add event listeners to buttons that open the modal
+  document.querySelectorAll('[data-modal-target]').forEach(button => {
+    button.addEventListener('click', () => {
+      toggleModal(button.getAttribute('data-modal-target'));
+    });
+  });
+
+  // Close the modal when clicking outside of it
+  document.getElementById('blur-overlay').addEventListener('click', (event) => {
+    toggleModal('sign-in-modal');
+  });
+</script>
