@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from django.db import models
+from django.utils.timezone import make_aware
 
 from smllr.users.models import User
 
@@ -22,7 +23,7 @@ class ShortURL(models.Model):
     def is_expired(self, expiration_time: int) -> bool:
         exp = timedelta(days=expiration_time)
         if self.user.is_anonymous:
-            return datetime.now() - self.created_at > exp
+            return make_aware(datetime.now()) - self.created_at > exp
         return False
 
 
