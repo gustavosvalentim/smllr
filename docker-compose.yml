@@ -16,6 +16,7 @@ services:
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_PORT: 5432
       DATABASE_HOST: postgres
+      USE_HTTPS: ${USE_HTTPS}
     ports:
       - "8080:8000"
     links:

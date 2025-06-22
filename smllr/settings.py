@@ -227,3 +227,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 SOCIALACCOUNT_ONLY = True
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if os.getenv('USE_HTTPS', 'True').lower() in ['true', 'yes', '1'] else 'http'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
