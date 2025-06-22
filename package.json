@@ -1,0 +1,19 @@
+{
+  "name": "smllr.io",
+  "version": "1.0.0",
+  "description": "**smllr.io** is a modern, minimal, and powerful URL shortener built with Django. Designed to be fast, elegant, and developer-friendly, it provides core link-shortening features with a sleek dark-mode interface and optional premium features like analytics, branded links, and QR code generation.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "postcss smllr/static/css/styles.css -o smllr/static/css/smllr.css --minify --watch",
+    "build": "postcss smllr/static/css/styles.css -o smllr/static/css/smllr.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.10",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "tailwindcss": "^4.1.10"
+  }
+}

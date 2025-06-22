@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Roboto", sans-serif;
+}
+
+.bg-primary {
+  background-color: #3b82f6;
+}
+
+.bg-primary:hover {
+  background-color: #2563eb;
+}
+
+.text-primary {
+  color: #3b82f6;
+}
+
+.text-primary:hover {
+  color: #2563eb;
+}
+
+.border-primary {
+  border-color: #3b82f6;
+}

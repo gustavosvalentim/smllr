@@ -1,28 +1,29 @@
 {% extends 'smllr/base.html' %}
+{% load static %}
 
 {% block title %}{{ shorturl.name|default:shorturl.short_code }} - smllr{% endblock %}
 
 {% block content %}
 
-<div class="container mx-auto">
+<div class="container mx-auto" x-data="analyticsData()" x-init="init()">
   {% include 'smllr/partials/shorturl_details_pane.html' %}
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-4">
-    <div class="flex flex-col border-1 border-gray-600 rounded-lg overflow-x-hidden overflow-y-auto">
+    <div class="flex flex-col border-1 border-gray-600 rounded-lg">
       <div class="border-b-1 border-gray-600 px-4 py-2 mb-2">
         <h3 class="font-bold text-lg">Latest clicks</h3>
       </div>
-      <ul class="px-4 py-2">
-        {% for click in latest_clicks %}
-        <li class="flex justify-between items-center py-2">
-          <div>
-            <span>{{ click.ip_address }} - {{ click.device_type }}</span>
-          </div>
-          <div>
-            <span>{{ click.clicked_at }}</span>
-          </div>
-        </li>
-        {% endfor %}
+      <ul class="px-4 py-2 overflow-x-hidden overflow-y-auto max-h-88">
+        <template x-for="click in latestClicks">
+          <li class="flex justify-between items-center py-2">
+            <div>
+              <span x-text="click.ip_address"></span> - <span x-text="click.device_type"></span>
+            </div>
+            <div>
+              <span x-text="click.clicked_at"></span>
+            </div>
+          </li>
+        </template>
       </ul>
     </div>
 
@@ -36,22 +37,22 @@
           <ul class="px-4 py-2">
             <li class="flex justify-between items-center py-2">
               <span>Total clicks</span>
-              <span>{{ total_clicks }}</span>
+              <span x-text="totalClicks">0</span>
             </li>
 
             <li class="flex justify-between items-center py-2">
               <span>Desktop clicks</span>
-              <span>{{ desktop_clicks }}</span>
+              <span x-text="desktopClicks">0</span>
             </li>
 
             <li class="flex justify-between items-center py-2">
               <span>Mobile clicks</span>
-              <span>{{ mobile_clicks }}</span>
+              <span x-text="mobileClicks">0</span>
             </li>
 
             <li class="flex justify-between items-center py-2">
               <span>Tablet clicks</span>
-              <span>{{ tablet_clicks }}</span>
+              <span x-text="tabletClicks">0</span>
             </li>
           </ul>
         </div>
@@ -63,28 +64,8 @@
     </div>
   </div>
 </div>
+{% endblock %}
 
-<script>
-  const ctx = document.getElementById('chart-click-by-platform').getContext('2d');
-  const chartData = {
-    labels: ['Desktop', 'Mobile', 'Tablet'],
-    datasets: [{
-      label: 'Clicks by Platform',
-      data: ["{{ desktop_clicks }}", "{{ mobile_clicks }}", "{{ tablet_clicks }}"],
-      backgroundColor: [
-        'rgba(54, 162, 235, 0.6)',
-        'rgba(255, 99, 132, 0.6)',
-        'rgba(255, 206, 86, 0.6)'
-      ],
-    }]
-  };
-
-  const chartConfig = {
-    type: 'pie',
-    data: chartData,
-  };
-
-  new Chart(ctx, chartConfig);
-</script>
-
+{% block scripts %}
+<script src="{% static 'js/analytics.js' %}"></script>
 {% endblock %}

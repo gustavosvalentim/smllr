@@ -1,6 +1,7 @@
+import json
 from django.conf import settings
 from django.core.paginator import Paginator
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import FormView, TemplateView, View
 from smllr.core.response import not_found
@@ -12,17 +13,6 @@ from smllr.users.mixins import NonAnonymousUserRequiredMixin
 
 class ShortURLView(View):
 
-    def __store_analytics_data(self, request: HttpRequest, short_url: ShortURL):
-        short_url.increment_clicks()
-        short_url_click = ShortURLClick.objects.create(
-            short_url=short_url,
-            user_agent=request.user_metadata.user_agent,
-            ip_address=request.user_metadata.ip_address,
-            device_type=request.user_metadata.device_type,
-            referrer=request.user_metadata.referrer,
-        )
-        short_url_click.save()
-
     def get(self, request: HttpRequest, short_code: str):
         """
         Redirects to the original URL based on the short code provided in the request.
@@ -32,8 +22,17 @@ class ShortURLView(View):
 
         if short_url is None or short_url.is_expired(settings.SHORTURL_EXPIRATION_TIME_DAYS):
             return not_found(request, "Short URL not found or has expired.")
+        
+        short_url.increment_clicks()
 
-        self.__store_analytics_data(self.request, short_url)
+        short_url_click = ShortURLClick.objects.create(
+            short_url=short_url,
+            user_agent=request.user_metadata.user_agent,
+            ip_address=request.user_metadata.ip_address,
+            device_type=request.user_metadata.device_type,
+            referrer=request.user_metadata.referrer,
+        )
+        short_url_click.save()
 
         return redirect(short_url.destination_url)
 
@@ -135,3 +134,41 @@ class ShortURLDetailsView(NonAnonymousUserRequiredMixin, TemplateView):
         })
 
         return context
+
+
+class AnalyticsAPIView(NonAnonymousUserRequiredMixin, View):
+
+    def get(self, request: HttpRequest, short_code: str):
+        if short_code is None:
+            return not_found(self.request)
+
+        short_url = ShortURL.objects.filter(short_code=short_code).first()
+        clicks = ShortURLClick.objects.filter(short_url=short_url).order_by('-clicked_at')
+
+        if not short_url:
+            return not_found(self.request)
+        
+        latest_clicks = []
+        for click in clicks[:10]:
+            latest_clicks.append({
+                'clicked_at': click.clicked_at.isoformat(),
+                'user_agent': click.user_agent,
+                'ip_address': click.ip_address,
+                'device_type': click.device_type,
+                'referrer': click.referrer,
+            })
+
+        string_response = json.dumps({
+            'latest_clicks': latest_clicks,
+            'desktop_clicks': clicks.filter(device_type='Desktop').count(),
+            'mobile_clicks': clicks.filter(device_type='Mobile').count(),
+            'tablet_clicks': clicks.filter(device_type='Tablet').count(),
+            'total_clicks': clicks.count(),
+        })
+
+        response = HttpResponse()
+        response.status_code = 200
+        response.content = string_response
+        response['Content-Type'] = 'application/json'
+
+        return response
