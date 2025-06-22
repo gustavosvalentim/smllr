@@ -91,6 +91,7 @@ class ShortURLFormView(FormView):
 
         short_url = ShortURL.objects.create(
             user=user,
+            name=form.cleaned_data['name'],
             destination_url=form.cleaned_data['destination_url'],
             short_code=form.cleaned_data['short_code'],
         )
