@@ -44,4 +44,10 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+### 6. Start postcss (in a different terminal)
+
+```bash
+npm run dev
+```
+
 Visit http://127.0.0.1:8000 to start shortening URLs!

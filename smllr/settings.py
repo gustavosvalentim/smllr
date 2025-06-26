@@ -44,6 +44,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,
 INSTALLED_APPS = [
     'smllr.core',
     'smllr.shorturls',
+    'smllr.fingerprint',
     'smllr.users',
     'allauth',
     'allauth.account',
@@ -59,6 +60,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'smllr.fingerprint.middlewares.RequestFingerprintMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -66,7 +68,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'smllr.shorturls.middlewares.UserMetadataMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
 
@@ -228,6 +229,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 SOCIALACCOUNT_ONLY = True
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if os.getenv('USE_HTTPS', 'True').lower() in ['true', 'yes', '1'] else 'http'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if os.getenv('USE_HTTPS', 'False').lower() in ['true', 'yes', '1'] else 'http'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

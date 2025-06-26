@@ -19,7 +19,7 @@
         <div class="flex flex-col gap-2">
           <label class="text-gray-500 font-bold text-md" for="{{ form.name.id_for_label }}">Name</label>
           <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}"
-            class="px-2 py-2 border-1 border-gray-600 rounded-lg" placeholder="My awesome URL" required>
+            class="px-2 py-2 border-1 border-gray-600 rounded-lg" placeholder="My awesome URL">
           {% if form.name.errors %}
           <div class="text-red-500">
             {% for error in form.name.errors %}

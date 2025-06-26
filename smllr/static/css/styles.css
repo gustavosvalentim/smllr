@@ -4,22 +4,27 @@
   --font-sans: "Roboto", sans-serif;
 }
 
+:root {
+  --primary-color: #3b82f6;
+  --primary-color-darker: #2563eb;
+}
+
 .bg-primary {
-  background-color: #3b82f6;
+  background-color: var(--primary-color);
 }
 
 .bg-primary:hover {
-  background-color: #2563eb;
+  background-color: var(--primary-color-darker);
 }
 
 .text-primary {
-  color: #3b82f6;
+  color: var(--primary-color);
 }
 
 .text-primary:hover {
-  color: #2563eb;
+  color: var(--primary-color-darker);
 }
 
 .border-primary {
-  border-color: #3b82f6;
+  border-color: var(--primary-color);
 }

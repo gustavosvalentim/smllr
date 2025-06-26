@@ -167,6 +167,12 @@ wheels = [
 ]
 
 [[package]]
+name = "httpagentparser"
+version = "1.9.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bc/4d/1fc46c8a2c9a0ceb9e9580d7ce92bf764c373deb7af61fde2fd7b5516495/httpagentparser-1.9.5.tar.gz", hash = "sha256:53cefd9d65990f6fe59c0378cad8ea1b9df8f770d2e8bd9d8762edae033be80a", size = 7692 }
+
+[[package]]
 name = "idna"
 version = "3.10"
 source = { registry = "https://pypi.org/simple" }
@@ -292,6 +298,7 @@ dependencies = [
     { name = "django" },
     { name = "django-allauth", extra = ["socialaccount"] },
     { name = "gunicorn" },
+    { name = "httpagentparser" },
     { name = "psycopg2-binary" },
     { name = "python-dotenv" },
 ]
@@ -301,6 +308,7 @@ requires-dist = [
     { name = "django", specifier = ">=5.2.1" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=65.8.1" },
     { name = "gunicorn", specifier = ">=23.0.0" },
+    { name = "httpagentparser", specifier = ">=1.9.5" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
 ]

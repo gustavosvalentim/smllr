@@ -2,7 +2,6 @@ from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.shortcuts import redirect
 
-from smllr.shorturls.tracking import get_ip_address
 from smllr.users.models import User
 
 
@@ -52,7 +51,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
 
         user = sociallogin.user
         user.username = user.email
-        user.ip_address = get_ip_address(request)
+        user.ip_address = request.fingerprint.fingerprint_data.get('ip_address')
         user.is_anonymous = False
         user.set_unusable_password()
         user.save()
