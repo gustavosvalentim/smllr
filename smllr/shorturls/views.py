@@ -12,7 +12,7 @@ from smllr.shorturls.models import ShortURL, ShortURLClick, User
 from smllr.users.mixins import NonAnonymousUserRequiredMixin
 
 
-class ShortURLView(View):
+class ShortURLRedirectView(View):
 
     def get(self, request: HttpRequest, short_code: str):
         """
@@ -75,17 +75,16 @@ class ShortURLFormView(FormView):
         """
 
         user = self.request.user
-        if user.pk is None:
-            user_ip_address = self.request.fingerprint.fingerprint_data.get('ip_address')
-            # Create a new user if one does not exist
-            (user, _) = User.objects.get_or_create(
-                username=user_ip_address,
-                ip_address=user_ip_address,
-                name='Anonymous',
-                is_anonymous=True,
-            )
-
         try:
+            if user.pk is None:
+                user_ip_address = self.request.fingerprint.fingerprint_data.get('ip_address')
+                queryset = User.objects.filter(ip_address=user_ip_address, is_anonymous=True)
+
+                if queryset.exists():
+                    user = queryset.first()
+                else:
+                    user = User.objects.create_anonymous(user_ip_address)
+
             ShortURL.objects.create(
                 user=user,
                 destination_url=form.cleaned_data['destination_url'],
@@ -132,41 +131,3 @@ class ShortURLDetailsView(NonAnonymousUserRequiredMixin, View):
         }
 
         return render(request, 'smllr/shorturl_details.html', context)
-
-
-class AnalyticsAPIView(NonAnonymousUserRequiredMixin, View):
-
-    def get(self, request: HttpRequest, short_code: str):
-        if short_code is None:
-            return not_found(self.request)
-
-        short_url = ShortURL.objects.filter(short_code=short_code).first()
-        clicks = ShortURLClick.objects.filter(short_url=short_url).order_by('-clicked_at')
-
-        if not short_url:
-            return not_found(self.request)
-        
-        latest_clicks = []
-        for click in clicks[:10]:
-            latest_clicks.append({
-                'clicked_at': click.clicked_at.isoformat(),
-                'user_agent': click.user_agent,
-                'ip_address': click.ip_address,
-                'device_type': click.device_type,
-                'referrer': click.referrer,
-            })
-
-        string_response = json.dumps({
-            'latest_clicks': latest_clicks,
-            'desktop_clicks': clicks.filter(device_type='Desktop').count(),
-            'mobile_clicks': clicks.filter(device_type='Mobile').count(),
-            'tablet_clicks': clicks.filter(device_type='Tablet').count(),
-            'total_clicks': clicks.count(),
-        })
-
-        response = HttpResponse()
-        response.status_code = 200
-        response.content = string_response
-        response['Content-Type'] = 'application/json'
-
-        return response
