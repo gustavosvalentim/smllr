@@ -12,13 +12,13 @@ class AnalyticsAPIView(NonAnonymousUserRequiredMixin, View):
 
     def get(self, request: HttpRequest, short_code: str):
         if short_code is None:
-            return not_found(self.request)
+            return not_found(request)
 
         short_url = ShortURL.objects.filter(short_code=short_code).first()
         clicks = ShortURLClick.objects.filter(short_url=short_url).order_by('-clicked_at')
 
         if not short_url:
-            return not_found(self.request)
+            return not_found(request)
         
         latest_clicks = []
         for click in clicks[:10]:
