@@ -17,7 +17,8 @@
         <template x-for="click in latestClicks">
           <li class="flex justify-between items-center py-2">
             <div>
-              <span x-text="click.ip_address"></span> - <span x-text="click.device_type"></span>
+              <span x-text="click.ip_address"></span> - <span x-text="click.os"></span> - <span
+                x-text="click.browser_name"></span> <span x-text="click.browser_version"></span>
             </div>
             <div>
               <span x-text="click.clicked_at"></span>
@@ -41,18 +42,18 @@
             </li>
 
             <li class="flex justify-between items-center py-2">
-              <span>Desktop clicks</span>
-              <span x-text="desktopClicks">0</span>
+              <span>Windows clicks</span>
+              <span x-text="windowsClicks">0</span>
             </li>
 
             <li class="flex justify-between items-center py-2">
-              <span>Mobile clicks</span>
-              <span x-text="mobileClicks">0</span>
+              <span>Linux clicks</span>
+              <span x-text="linuxClicks">0</span>
             </li>
 
             <li class="flex justify-between items-center py-2">
-              <span>Tablet clicks</span>
-              <span x-text="tabletClicks">0</span>
+              <span>Android clicks</span>
+              <span x-text="androidClicks">0</span>
             </li>
           </ul>
         </div>

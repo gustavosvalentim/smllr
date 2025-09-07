@@ -6,11 +6,11 @@ function initChart(data) {
     .getContext("2d");
 
   const chartData = {
-    labels: ["Desktop", "Mobile", "Tablet"],
+    labels: ["Windows", "Linux", "Android"],
     datasets: [
       {
         label: "Clicks by Platform",
-        data: [data.desktop_clicks, data.mobile_clicks, data.tablet_clicks],
+        data: [data.windows_clicks, data.linux_clicks, data.android_clicks],
         backgroundColor: [
           "rgba(54, 162, 235, 0.6)",
           "rgba(255, 99, 132, 0.6)",
@@ -46,17 +46,17 @@ async function fetchChartData() {
 function analyticsData() {
   return {
     totalClicks: 0,
-    desktopClicks: 0,
-    mobileClicks: 0,
-    tabletClicks: 0,
+    windowsClicks: 0,
+    linuxClicks: 0,
+    androidClicks: 0,
     latestClicks: [],
     init() {
       fetchChartData()
         .then((data) => {
           this.totalClicks = data.total_clicks;
-          this.desktopClicks = data.desktop_clicks;
-          this.mobileClicks = data.mobile_clicks;
-          this.tabletClicks = data.tablet_clicks;
+          this.windowsClicks = data.windows_clicks;
+          this.linuxClicks = data.linux_clicks;
+          this.androidClicks = data.android_clicks;
           this.latestClicks = data.latest_clicks;
           initChart(data);
         })

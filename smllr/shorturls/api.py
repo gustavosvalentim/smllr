@@ -28,13 +28,16 @@ class AnalyticsAPIView(NonAnonymousUserRequiredMixin, View):
                 'ip_address': click.fingerprint.ip_address,
                 'device_type': click.fingerprint.device_type,
                 'referrer': click.fingerprint.referrer,
+                'os': click.fingerprint.os,
+                'browser_name': click.fingerprint.browser_name,
+                'browser_version': click.fingerprint.browser_version,
             })
 
         string_response = json.dumps({
             'latest_clicks': latest_clicks,
-            'desktop_clicks': clicks.filter(fingerprint__device_type='Desktop').count(),
-            'mobile_clicks': clicks.filter(fingerprint__device_type='Mobile').count(),
-            'tablet_clicks': clicks.filter(fingerprint__device_type='Tablet').count(),
+            'windows_clicks': clicks.filter(fingerprint__os__contains='windows').count(),
+            'linux_clicks': clicks.filter(fingerprint__os__contains='linux').count(),
+            'android_clicks': clicks.filter(fingerprint__os__contains='android').count(),
             'total_clicks': clicks.count(),
         })
 
