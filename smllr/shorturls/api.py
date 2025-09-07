@@ -24,17 +24,17 @@ class AnalyticsAPIView(NonAnonymousUserRequiredMixin, View):
         for click in clicks[:10]:
             latest_clicks.append({
                 'clicked_at': click.clicked_at.isoformat(),
-                'user_agent': click.user_agent,
-                'ip_address': click.ip_address,
-                'device_type': click.device_type,
-                'referrer': click.referrer,
+                'user_agent': click.fingerprint.user_agent,
+                'ip_address': click.fingerprint.ip_address,
+                'device_type': click.fingerprint.device_type,
+                'referrer': click.fingerprint.referrer,
             })
 
         string_response = json.dumps({
             'latest_clicks': latest_clicks,
-            'desktop_clicks': clicks.filter(device_type='Desktop').count(),
-            'mobile_clicks': clicks.filter(device_type='Mobile').count(),
-            'tablet_clicks': clicks.filter(device_type='Tablet').count(),
+            'desktop_clicks': clicks.filter(fingerprint__device_type='Desktop').count(),
+            'mobile_clicks': clicks.filter(fingerprint__device_type='Mobile').count(),
+            'tablet_clicks': clicks.filter(fingerprint__device_type='Tablet').count(),
             'total_clicks': clicks.count(),
         })
 

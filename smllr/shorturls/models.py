@@ -51,11 +51,4 @@ class ShortURL(models.Model):
 class ShortURLClick(models.Model):
     short_url = models.ForeignKey(ShortURL, on_delete=models.CASCADE)
     clicked_at = models.DateTimeField(auto_now_add=True)
-    user_agent = models.CharField(max_length=255, blank=True, null=True)
-    ip_address = models.GenericIPAddressField(blank=True, null=True)
-    device_type = models.CharField(max_length=50, blank=True, null=True)
-    referrer = models.URLField(blank=True, null=True)
-    fingerprint = models.ForeignKey(Fingerprint, blank=True, null=True)
-
-    def __str__(self):
-        return f"Click on {self.short_url.short_code} from {self.device_type} at {self.clicked_at}"
+    fingerprint = models.ForeignKey(Fingerprint, on_delete=models.DO_NOTHING, blank=True, null=True)

@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from typing import Any
 
 from django.http import HttpRequest
@@ -36,6 +35,7 @@ class HttpRequestFingerprintParser:
 
         return {
             'ip_address': self.get_ip_address(),
+            'user_agent': self.request.META.get('HTTP_USER_AGENT', 'Unknown'),
             'browser_name': user_agent.get('browser', {}).get('name', 'Unknown'),
             'browser_version': user_agent.get('browser', {}).get('version', 'Unknown'),
             'os': user_agent.get('os', {}).get('name', 'Unknown'),

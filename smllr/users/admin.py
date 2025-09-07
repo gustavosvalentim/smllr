@@ -9,12 +9,16 @@ class CustomUserAdmin(UserAdmin):
     Custom admin class for the User model.
     """
 
-    list_display = ('username', 'email', 'is_staff', 'is_active')
-    search_fields = ('username', 'email')
-    ordering = ('username',)
-    fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('ip_address',)}),
-        (None, {'fields': ('is_anonymous',)}),
+    readonly_fields = ('created_at', 'last_login',)
+    list_display = ('email', 'ip_address', 'is_superuser', 'is_active', 'is_anonymous',)
+    search_fields = ('email', 'ip_address',)
+    ordering = ('-created_at',)
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal info', {'fields': ('name',)}),
+        ('Permissions', {'fields': ('is_active', 'is_superuser','is_anonymous',)}),
+        ('Fingerprint', {'fields': ('ip_address',)}),
+        ('Important dates', {'fields': ('last_login', 'created_at')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
         (None, {'fields': ('ip_address',)}),

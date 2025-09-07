@@ -2,7 +2,7 @@ import json
 
 from django.db import transaction
 from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.views.generic import FormView, View
 
@@ -14,6 +14,7 @@ from smllr.users.mixins import NonAnonymousUserRequiredMixin
 
 class ShortURLRedirectView(View):
 
+    @transaction.atomic
     def get(self, request: HttpRequest, short_code: str):
         """
         Redirects to the original URL based on the short code provided in the request.
@@ -26,14 +27,13 @@ class ShortURLRedirectView(View):
         
         short_url.increment_clicks()
 
+        request.fingerprint.save()
+
         short_url_click = ShortURLClick.objects.create(
             short_url=short_url,
-            user_agent=request.fingerprint.fingerprint_data.get('user_agent'),
-            ip_address=request.fingerprint.fingerprint_data.get('ip_address'),
-            device_type=request.fingerprint.fingerprint_data.get('device_type'),
-            referrer=request.fingerprint.fingerprint_data.get('referrer'),
+            fingerprint=request.fingerprint,
         )
-        request.fingerprint.save()
+        
         short_url_click.save()
 
         return redirect(short_url.destination_url)
@@ -54,7 +54,7 @@ class ShortURLFormView(FormView):
         queryset = ShortURL.objects.order_by('-created_at')
 
         if self.request.user.is_anonymous:
-            user_ip_address = self.request.fingerprint.fingerprint_data.get("ip_address")
+            user_ip_address = self.request.fingerprint.ip_address
             queryset = queryset.filter(user__ip_address=user_ip_address, user__is_anonymous=True)
         else:
             queryset = queryset.filter(user=self.request.user, user__is_anonymous=False)
@@ -77,7 +77,7 @@ class ShortURLFormView(FormView):
         user = self.request.user
         try:
             if user.pk is None:
-                user_ip_address = self.request.fingerprint.fingerprint_data.get('ip_address')
+                user_ip_address = self.request.fingerprint.ip_address
                 queryset = User.objects.filter(ip_address=user_ip_address, is_anonymous=True)
 
                 if queryset.exists():
@@ -116,18 +116,11 @@ class ShortURLDetailsView(NonAnonymousUserRequiredMixin, View):
         if short_url.user.pk != self.request.user.pk:
             return forbidden(self.request)
 
-        clicks = ShortURLClick.objects.filter(short_url=short_url).order_by('-clicked_at')
-
         if not short_url:
             return not_found(self.request)
         
         context = {
             'shorturl': short_url,
-            'latest_clicks': clicks[:10],
-            'desktop_clicks': clicks.filter(device_type='Desktop').count(),
-            'mobile_clicks': clicks.filter(device_type='Mobile').count(),
-            'tablet_clicks': clicks.filter(device_type='Tablet').count(),
-            'total_clicks': clicks.count(),
         }
 
         return render(request, 'smllr/shorturl_details.html', context)
