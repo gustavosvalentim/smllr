@@ -1,9 +1,14 @@
-FROM python:3.10-slim
+FROM python:3.13.7-slim
 
 WORKDIR /app
 
 COPY pyproject.toml .
 COPY uv.lock .
+
+# Download and install nvm:
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash \
+    source "$HOME/.nvm/nvm.sh" \
+    nvm install 22
 
 RUN apt-get update -y \
     && apt-get upgrade -y \

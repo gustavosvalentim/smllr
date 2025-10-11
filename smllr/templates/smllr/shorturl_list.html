@@ -2,10 +2,16 @@
 
 {% block content %}
 
-<div class="container mx-auto">
-  <div class="flex flex-col max-w-128 mx-auto mt-8 rounded-lg border-1 border-gray-950">
-    <div class="border-b-1 border-gray-600 px-6 py-4">
-      <h1 class="text-2xl font-bold">Shorten your URL</h1>
+<div class="flex flex-col justify-center items-center mt-4">
+  <h1 class="text-5xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">URL Shortener</h1>
+  <p class="text-lg text-muted-foreground mt-1">Transform long URLs into short, shareable links in seconds</p>
+</div>
+
+<div class="mx-auto max-w-5xl">
+  <div class="flex flex-col mt-8 rounded-lg border-2 shadow-lg">
+    <div class="px-6 py-4">
+      <h1 class="text-lg font-bold">Shorten your URL</h1>
+      <p class="text-md mt-1">Enter a long URL below to create a shortened version</p> 
     </div>
     {% if form.non_field_errors %}
     <div class="bg-red-500 text-white px-6 py-4">
@@ -14,26 +20,10 @@
     {% endif %}
     <form method="post">
       {% csrf_token %}
-      <div class="flex flex-col gap-8 py-4 px-6">
-        {% if not user.is_anonymous %}
-        <div class="flex flex-col gap-2">
-          <label class="text-gray-500 font-bold text-md" for="{{ form.name.id_for_label }}">Name</label>
-          <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}"
-            class="px-2 py-2 border-1 border-gray-600 rounded-lg" placeholder="My awesome URL">
-          {% if form.name.errors %}
-          <div class="text-red-500">
-            {% for error in form.name.errors %}
-            <p>{{ error }}</p>
-            {% endfor %}
-            {% endif %}
-          </div>
-          {% endif %}
-
-          <div class="flex flex-col gap-2">
-            <label class="text-gray-500 font-bold text-md" for="{{ form.destination_url.id_for_label }}">Destination
-              URL</label>
+      <div class="flex gap-2 py-4 px-6">
+          <div class="flex w-full">
             <input type="text" name="{{ form.destination_url.name }}" id="{{ form.destination_url.id_for_label }}"
-              class="px-2 py-2 border-1 border-gray-600 rounded-lg"
+              class="w-full px-2 py-2 border-1 shadow-sm rounded-lg"
               placeholder="https://www.example.com/your-very-long-url" required>
             {% if form.destination_url.errors %}
             <div class="text-red-500">
@@ -45,8 +35,8 @@
           </div>
 
           <div class="flex justify-start">
-            <button type="submit" class="px-10 py-1 bg-primary duration-300 rounded-md text-white">
-              Create
+            <button type="submit" class="px-10 py-1 bg-primary duration-300 rounded-full text-white">
+              Shorten
             </button>
           </div>
         </div>

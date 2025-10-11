@@ -1,55 +1,56 @@
 {% load smllr_core %}
 
-<div class="rounded-lg overflow-hidden border-gray-950 mt-8">
-  <table class="mx-auto text-left w-full">
-    <thead class="bg-gray-300">
-      <tr>
-        {% if user.is_authenticated %}
-        <th class="px-6 py-3">Name</th>
-        {% endif %}
-        <th class="px-6 py-3">Destination URL</th>
-        <th class="px-6 py-3">Short code</th>
-        <th class="px-6 py-3">Clicks</th>
-        <th class="px-6 py-3">Created at</th>
-        {% if user.is_authenticated %}
-        <th class="px-6 py-3">-</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for shorturl in shorturls_list %}
-      <tr class="border-b-1 border-gray-600/50">
-        {% if user.is_authenticated %}
-        <td class="px-6 py-3">{{ shorturl.name|default:shorturl.short_code }}</td>
-        {% endif %}
-        <td class="px-6 py-4">{{ shorturl.destination_url }}</td>
-        <td class="px-6 py-4">{{ settings.public_url }}/{{ shorturl.short_code }}</td>
-        <td class="px-6 py-4">{{ shorturl.clicks }}</td>
-        <td class="px-6 py-4">{{ shorturl.created_at }}</td>
-        {% if user.is_authenticated %}
-        <td class="px-6 py-4">
-          <a href="{% url 'shorturls_details' short_code=shorturl.short_code %}" class="text-blue-500 hover:underline">
-            Details
-          </a>
-        </td>
-        {% endif %}
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="4" class="text-center">No short URLs created yet.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+<div class="rounded-lg overflow-hidden border-2 shadow-lg mt-8">
+  <div class="px-6 py-4">
+    <h1 class="text-lg font-bold">Your Shortened URLs</h1>
+    <p class="text-md mt-1">Manage and track all your shortened links</p>
+  </div>
 
-{% if not user.is_anonymous %}
-<div class="flex items-center justify-end w-full">
-  {% for i in paginator.num_pages|to_range %}
-  <a href="?page={{ i }}"
-    class="px-4 py-2 mx-1 rounded-md {% if i == page_obj.number|default:1 %} 'bg-blue-900 text-white' {% else %} 'bg-gray-300 text-gray-800 hover:bg-gray-400' {% endif %}">
-    {{ i }}
-  </a>
-  {% endfor %}
+  <div class="px-6 py-4">
+    <div class="border overflow-hidden shadow-sm rounded-lg"> 
+      <table class="mx-auto text-left w-full">
+        <thead class="border-b-1">
+          <tr class="bg-muted/50">
+            <th class="px-6 py-3">Original URL</th>
+            <th class="px-6 py-3">Short URL</th>
+            <th class="px-6 py-3">Clicks</th>
+            {% if user.is_authenticated %}
+            <th class="px-6 py-3">Actions</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for shorturl in shorturls_list %}
+          <tr class="hover:bg-muted/30">
+            <td class="px-6 py-4">{{ shorturl.destination_url }}</td>
+            <td class="px-6 py-4">{{ settings.public_url }}/{{ shorturl.short_code }}</td>
+            <td class="px-6 py-4">{{ shorturl.clicks }}</td>
+            {% if user.is_authenticated %}
+            <td class="px-6 py-4">
+              <a href="{% url 'shorturls_details' short_code=shorturl.short_code %}" class="text-blue-500 hover:underline">
+                Details
+              </a>
+            </td>
+            {% endif %}
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center">No short URLs created yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <!-- Pagination -->
+      {% if not user.is_anonymous %}
+      <div class="flex items-center justify-end w-full border-t-1">
+        {% for i in paginator.num_pages|to_range %}
+        <a href="?page={{ i }}"
+          class="px-4 py-2 mx-1 rounded-md {% if i == page_obj.number|default:1 %} 'bg-blue-900 text-white' {% else %} 'bg-gray-300 text-gray-800 hover:bg-gray-400' {% endif %}">
+          {{ i }}
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
-{% endif %}

@@ -35,7 +35,7 @@ class ShortURL(models.Model):
     objects: ShortURLManager = ShortURLManager()
 
     def __str__(self):
-        return self.short_code
+        return f'{self.name} - {self.short_code}'
 
     def increment_clicks(self):
         self.clicks += 1

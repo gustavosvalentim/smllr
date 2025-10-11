@@ -28,31 +28,31 @@
       </ul>
     </div>
 
-    <div class="flex flex-col max-h-140 md:max-h-128 border-1 border-gray-600 rounded-lg">
-      <div class="border-b-1 border-gray-600 px-4 py-2 mb-2">
+    <div class="flex flex-col max-h-140 md:max-h-128 border-2 shadow-lg rounded-lg">
+      <div class="border-b-1 px-4 py-2 mb-2">
         <h3 class="font-bold text-lg">Clicks by platform</h3>
       </div>
 
-      <div class="flex flex-col md:flex-row justify-between">
-        <div class="w-full mr-24">
+      <div class="flex flex-col md:flex-row justify-around">
+        <div class="w-full mr-12">
           <ul class="px-4 py-2">
-            <li class="flex justify-between items-center py-2">
-              <span>Total clicks</span>
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>Total</span>
               <span x-text="totalClicks">0</span>
             </li>
 
-            <li class="flex justify-between items-center py-2">
-              <span>Windows clicks</span>
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>Windows</span>
               <span x-text="windowsClicks">0</span>
             </li>
 
-            <li class="flex justify-between items-center py-2">
-              <span>Linux clicks</span>
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>Linux</span>
               <span x-text="linuxClicks">0</span>
             </li>
 
-            <li class="flex justify-between items-center py-2">
-              <span>Android clicks</span>
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>Android</span>
               <span x-text="androidClicks">0</span>
             </li>
           </ul>
