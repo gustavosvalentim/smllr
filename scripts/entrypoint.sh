@@ -1,9 +1,3 @@
-# Build css
-npm run build
-
-# Move static files to the correct location
-python manage.py collectstatic --noinput
-
 # Run database migrations
 python manage.py migrate --noinput
 

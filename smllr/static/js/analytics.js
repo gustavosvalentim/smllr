@@ -39,8 +39,7 @@ async function fetchChartData() {
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
-  const data = await response.json();
-  return data;
+  return await response.json();
 }
 
 function analyticsData() {
@@ -49,6 +48,8 @@ function analyticsData() {
     windowsClicks: 0,
     linuxClicks: 0,
     androidClicks: 0,
+    instagramClicks: 0,
+    facebookClicks: 0,
     latestClicks: [],
     init() {
       fetchChartData()
@@ -58,6 +59,8 @@ function analyticsData() {
           this.linuxClicks = data.linux_clicks;
           this.androidClicks = data.android_clicks;
           this.latestClicks = data.latest_clicks;
+          this.instagramClicks = data.instagram_clicks;
+          this.facebookClicks = data.facebook_clicks;
           initChart(data);
         })
         .catch((error) => {
