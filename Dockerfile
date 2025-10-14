@@ -7,7 +7,7 @@ COPY uv.lock .
 
 RUN apt-get update -y \
     && apt-get upgrade -y \
-    && apt-get install curl \
+    && apt-get install curl -y \
     && pip install --upgrade pip \
     && pip install uv \
     && uv sync --frozen --no-install-project --no-dev
