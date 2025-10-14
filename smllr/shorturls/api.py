@@ -10,6 +10,9 @@ from smllr.users.mixins import NonAnonymousUserRequiredMixin
 
 class AnalyticsAPIView(NonAnonymousUserRequiredMixin, View):
 
+    # TODO: caching?
+    # use a refresh time and set cache to expire after refresh time
+    # even if this is a few seconds, it's worth it
     def _get_latest_clicks(self, clicks: list[ShortURLClick]):
         latest_clicks = []
         for click in clicks[:10]:

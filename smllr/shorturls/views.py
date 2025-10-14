@@ -27,6 +27,11 @@ class ShortURLRedirectView(View):
             return not_found(request, "Short URL not found or has expired.")
         
         try:
+            # TODO: message queue?
+            # saving fingerprint and increment a click on a queue is better than on a view.
+            # this view should be pretty fast, so get the URL and redirect as fast as possible.
+            # if there is an error saving the fingerprint, we don't care for now,
+            # throw it in a queue and handle it later
             request.fingerprint.save()
             short_url.increment_clicks()
             short_url_click = ShortURLClick.objects.create(
