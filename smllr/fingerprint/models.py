@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Fingerprint(models.Model):
+    # TODO: remove fingerprint_data
     fingerprint_data = models.JSONField()
     ip_address = models.CharField(max_length=45, blank=True, null=True)
     user_agent = models.CharField(max_length=512, blank=True, null=True)

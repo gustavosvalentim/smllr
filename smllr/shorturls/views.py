@@ -1,4 +1,4 @@
-import json
+import logging
 
 from django.db import transaction
 from django.core.paginator import Paginator
@@ -20,21 +20,22 @@ class ShortURLRedirectView(View):
         Redirects to the original URL based on the short code provided in the request.
         """
 
+        logger = logging.getLogger(self.__class__.__name__)
         short_url = ShortURL.objects.filter(short_code=short_code).first()
 
         if short_url is None or short_url.is_expired():
             return not_found(request, "Short URL not found or has expired.")
         
-        short_url.increment_clicks()
-
-        request.fingerprint.save()
-
-        short_url_click = ShortURLClick.objects.create(
-            short_url=short_url,
-            fingerprint=request.fingerprint,
-        )
-        
-        short_url_click.save()
+        try:
+            request.fingerprint.save()
+            short_url.increment_clicks()
+            short_url_click = ShortURLClick.objects.create(
+                short_url=short_url,
+                fingerprint=request.fingerprint,
+            )
+            short_url_click.save()
+        except Exception as err:
+            logger.error("Error saving request fingerprint", err, exc_info=True)
 
         return redirect(short_url.destination_url)
 
@@ -74,6 +75,7 @@ class ShortURLFormView(FormView):
         If the form is valid, save the short URL and redirect to the success URL.
         """
 
+        logger = logging.getLogger(self.__class__.__name__)
         user = self.request.user
         try:
             if user.pk is None:
@@ -92,6 +94,7 @@ class ShortURLFormView(FormView):
                 short_code=form.cleaned_data['short_code']
             )
         except Exception as ex:
+            logger.error("Error creating short URL", ex, exc_info=True)
             form.add_error(None, ex)
             return self.form_invalid(form)
 
@@ -108,17 +111,14 @@ class ShortURLDetailsView(NonAnonymousUserRequiredMixin, View):
         Returns the analytics data for the short URL based on the short code provided in the request.
         """
 
-        if short_code is None:
-            return not_found(self.request)
-
         short_url = ShortURL.objects.filter(short_code=short_code).first()
-
-        if short_url.user.pk != self.request.user.pk:
-            return forbidden(self.request)
 
         if not short_url:
             return not_found(self.request)
-        
+
+        if short_url.user.pk != self.request.user.pk:
+            return forbidden(self.request)
+ 
         context = {
             'shorturl': short_url,
         }

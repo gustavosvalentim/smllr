@@ -9,27 +9,34 @@
   {% include 'smllr/partials/shorturl_details_pane.html' %}
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-4">
-    <div class="flex flex-col border-1 border-gray-600 rounded-lg">
-      <div class="border-b-1 border-gray-600 px-4 py-2 mb-2">
+    <div class="flex flex-col border-2 shadow-lg rounded-lg">
+      <div class="border-b-1 shadow-lg px-4 py-2 mb-2">
         <h3 class="font-bold text-lg">Latest clicks</h3>
       </div>
-      <ul class="px-4 py-2 overflow-x-hidden overflow-y-auto max-h-88">
-        <template x-for="click in latestClicks">
-          <li class="flex justify-between items-center py-2">
-            <div>
-              <span x-text="click.ip_address"></span> - <span x-text="click.os"></span> - <span
-                x-text="click.browser_name"></span> <span x-text="click.browser_version"></span>
-            </div>
-            <div>
-              <span x-text="click.clicked_at"></span>
-            </div>
-          </li>
-        </template>
-      </ul>
+      <table class="mx-auto text-left w-full">
+        <thead class="border-b-1">
+          <tr class="bg-muted/50">
+            <th class="px-6 py-3">Ip Address</th>
+            <th class="px-6 py-3">Platform</th>
+            <th class="px-6 py-3">Browser</th>
+            <th class="px-6 py-3">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="click in latestClicks">
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3" x-text="click.ip_address" />
+              <td class="px-6 py-3" x-text="click.os" />
+              <td class="px-6 py-3" x-text="click.browser_name" />
+              <td class="px-6 py-3" x-text="click.clicked_at" />
+            </tr>
+          </template>
+        </tbody>
+      </table>
     </div>
 
     <div class="flex flex-col max-h-140 md:max-h-128 border-2 shadow-lg rounded-lg">
-      <div class="border-b-1 px-4 py-2 mb-2">
+      <div class="border-b-1 shadow-lg px-4 py-2 mb-2">
         <h3 class="font-bold text-lg">Clicks by platform</h3>
       </div>
 
