@@ -25,9 +25,6 @@ RUN source $HOME/.nvm/nvm.sh \
 # Set python deps on PATH
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Handle django static files
-RUN python manage.py collectstatic --noinput
-
 EXPOSE 8000
 
 ENTRYPOINT ["/bin/sh", "/app/scripts/entrypoint.sh"]
