@@ -17,14 +17,50 @@ services:
       DATABASE_PORT: 5432
       DATABASE_HOST: postgres
       USE_HTTPS: ${USE_HTTPS}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      MESSAGE_BROKER_URL: amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
     ports:
       - "8080:8000"
     links:
       - postgres
+      - redis
+      - rabbitmq
     depends_on:
       - postgres
+      - redis
+      - rabbitmq
     volumes:
       - /var/www/smllr:/app/static
+
+  webapp-celery:
+    build:
+      context: .
+      dockerfile: celery.Dockerfile
+    env_file: .env
+    environment:
+      DEBUG: ${DEBUG}
+      DATABASE_ENGINE: ${DATABASE_ENGINE}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_PORT: 5432
+      DATABASE_HOST: postgres
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      MESSAGE_BROKER_URL: amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+    links:
+      - postgres
+      - redis
+      - rabbitmq
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
 
   postgres:
     image: postgres:latest
@@ -36,6 +72,28 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis/redis-stack-server:latest
+    environment:
+      VALKEY_EXTRA_ARGS: "--requirepass ${REDIS_PASSWORD}"
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+
+  rabbitmq-management:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+    depends_on:
+      - rabbitmq
 
 volumes:
   postgres_data:

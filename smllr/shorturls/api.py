@@ -33,9 +33,9 @@ class AnalyticsAPIView(NonAnonymousUserRequiredMixin, View):
 
     def _get_clicks_by_platform(self, clicks: list[ShortURLClick]):
         return {
-            'windows_clicks': clicks.filter(fingerprint__os__contains='windows').count(),
-            'linux_clicks': clicks.filter(fingerprint__os__contains='linux').count(),
-            'android_clicks': clicks.filter(fingerprint__os__contains='android').count(),
+            'windows_clicks': clicks.filter(fingerprint__os__contains='Windows').count(),
+            'linux_clicks': clicks.filter(fingerprint__os__contains='Linux').count(),
+            'android_clicks': clicks.filter(fingerprint__os__contains='Android').count(),
         }
 
     def _get_clicks_by_source(self, clicks: list[ShortURLClick]):

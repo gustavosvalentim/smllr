@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import logging
 import os
 
 from pathlib import Path
@@ -38,6 +39,10 @@ PUBLIC_URL = os.getenv('PUBLIC_URL', 'http://127.0.0.1:8000')
 # CSRF for production
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(',')
 
+# Logging
+logging.basicConfig(
+    level=logging.DEBUG if DEBUG else logging.INFO,
+)
 
 # Application definition
 
@@ -232,3 +237,17 @@ SOCIALACCOUNT_ONLY = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if os.getenv('USE_HTTPS', 'False').lower() in ['true', 'yes', '1'] else 'http'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Caching
+
+REDIS = {
+    'host': os.getenv('REDIS_HOST', 'localhost'),
+    'port': int(os.getenv('REDIS_PORT', '6379')),
+    'username': os.getenv('REDIS_USERNAME'),
+    'password': os.getenv('REDIS_PASSWORD'),
+}
+
+# Message queue
+
+CELERY_BROKER_URL = os.getenv("MESSAGE_BROKER_URL", "amqp://guest:guest@localhost:5672")
+

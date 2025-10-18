@@ -6,13 +6,17 @@ from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.views.generic import FormView, View
 
+from smllr.cache import RedisConnectionFactory, ShortURLCache
 from smllr.core.response import forbidden, not_found
+from smllr.fingerprint.models import Fingerprint
+from smllr.shorturls.tasks import save_shorturl_click
 from smllr.shorturls.forms import ShortURLForm
-from smllr.shorturls.models import ShortURL, ShortURLClick, User
+from smllr.shorturls.models import ShortURL, User
 from smllr.users.mixins import NonAnonymousUserRequiredMixin
 
 
 class ShortURLRedirectView(View):
+    cache = ShortURLCache(RedisConnectionFactory.get())
 
     @transaction.atomic
     def get(self, request: HttpRequest, short_code: str):
@@ -21,24 +25,27 @@ class ShortURLRedirectView(View):
         """
 
         logger = logging.getLogger(self.__class__.__name__)
-        short_url = ShortURL.objects.filter(short_code=short_code).first()
+        short_url = self.cache.get(short_code)
+
+        if short_url is None:
+            short_url = ShortURL.objects.filter(short_code=short_code).first()
+
+            logger.debug(f"Cache miss for {short_code}")
+
+            if short_url is not None and not short_url.is_expired():
+                self.cache.set(
+                    code=short_url.short_code,
+                    url=short_url.destination_url,
+                    created_at=short_url.created_at,
+                    user_id=short_url.user.pk,
+                )
 
         if short_url is None or short_url.is_expired():
             return not_found(request, "Short URL not found or has expired.")
-        
+ 
         try:
-            # TODO: message queue?
-            # saving fingerprint and increment a click on a queue is better than on a view.
-            # this view should be pretty fast, so get the URL and redirect as fast as possible.
-            # if there is an error saving the fingerprint, we don't care for now,
-            # throw it in a queue and handle it later
             request.fingerprint.save()
-            short_url.increment_clicks()
-            short_url_click = ShortURLClick.objects.create(
-                short_url=short_url,
-                fingerprint=request.fingerprint,
-            )
-            short_url_click.save()
+            save_shorturl_click.delay(short_code, request.fingerprint.pk)
         except Exception as err:
             logger.error("Error saving request fingerprint", err, exc_info=True)
 
@@ -129,3 +136,4 @@ class ShortURLDetailsView(NonAnonymousUserRequiredMixin, View):
         }
 
         return render(request, 'smllr/shorturl_details.html', context)
+
