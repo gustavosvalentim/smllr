@@ -38,12 +38,16 @@ class RedisConnectionFactory:
             return conn
         except Exception as err:
             logger.error("Error creating connection with Redis", err, exc_info=True)
-            raise Exception(f"Error connecting to Redis at {config['host']}:{config['port']}")
+            raise Exception(
+                f"Error connecting to Redis at {config['host']}:{config['port']}"
+            )
 
     @staticmethod
     def get() -> Redis:
         if RedisConnectionFactory.current_connection is None:
-            RedisConnectionFactory.current_connection = RedisConnectionFactory._create_connection(settings.REDIS)
+            RedisConnectionFactory.current_connection = (
+                RedisConnectionFactory._create_connection(settings.REDIS)
+            )
         return RedisConnectionFactory.current_connection
 
 
@@ -71,12 +75,15 @@ class ShortURLCache:
             logger.debug("ShortURL index definition already exists")
 
     def set(self, code: str, url: str, created_at: datetime, user_id: int):
-        self.connection.hset(f"shorturl:{code}", mapping={
-            "code": code,
-            "url": url,
-            "created_at": created_at.timestamp(),
-            "user_id": user_id,
-        })
+        self.connection.hset(
+            f"shorturl:{code}",
+            mapping={
+                "code": code,
+                "url": url,
+                "created_at": created_at.timestamp(),
+                "user_id": user_id,
+            },
+        )
 
     def get(self, code: str) -> ShortURL | None:
         query = Query(f"@code:{code}")
@@ -89,11 +96,10 @@ class ShortURLCache:
         created_at = datetime.fromtimestamp(float(doc.created_at))
 
         short_url = ShortURL(
-            user = User(pk=doc.user_id),
-            destination_url = doc.url,
-            short_code = doc.code,
-            created_at = make_aware(created_at),
+            user=User(pk=doc.user_id),
+            destination_url=doc.url,
+            short_code=doc.code,
+            created_at=make_aware(created_at),
         )
 
-        return short_url 
-
+        return short_url

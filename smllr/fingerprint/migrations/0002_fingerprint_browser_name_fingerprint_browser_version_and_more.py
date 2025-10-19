@@ -4,40 +4,39 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('fingerprint', '0001_initial'),
+        ("fingerprint", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='fingerprint',
-            name='browser_name',
+            model_name="fingerprint",
+            name="browser_name",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='fingerprint',
-            name='browser_version',
+            model_name="fingerprint",
+            name="browser_version",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='fingerprint',
-            name='device_type',
+            model_name="fingerprint",
+            name="device_type",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='fingerprint',
-            name='ip_address',
+            model_name="fingerprint",
+            name="ip_address",
             field=models.CharField(blank=True, max_length=45, null=True),
         ),
         migrations.AddField(
-            model_name='fingerprint',
-            name='os',
+            model_name="fingerprint",
+            name="os",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='fingerprint',
-            name='referrer',
+            model_name="fingerprint",
+            name="referrer",
             field=models.CharField(blank=True, max_length=512, null=True),
         ),
     ]

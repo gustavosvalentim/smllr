@@ -1,7 +1,5 @@
 from django import forms
 
-from smllr.shorturls.models import ShortURL
-
 
 class ShortURLForm(forms.Form):
     """

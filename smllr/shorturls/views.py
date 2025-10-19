@@ -8,7 +8,6 @@ from django.views.generic import FormView, View
 
 from smllr.cache import RedisConnectionFactory, ShortURLCache
 from smllr.core.response import forbidden, not_found
-from smllr.fingerprint.models import Fingerprint
 from smllr.shorturls.tasks import save_shorturl_click
 from smllr.shorturls.forms import ShortURLForm
 from smllr.shorturls.models import ShortURL, User
@@ -42,7 +41,7 @@ class ShortURLRedirectView(View):
 
         if short_url is None or short_url.is_expired():
             return not_found(request, "Short URL not found or has expired.")
- 
+
         try:
             request.fingerprint.save()
             save_shorturl_click.delay(short_code, request.fingerprint.pk)
@@ -57,14 +56,14 @@ class ShortURLFormView(FormView):
     View to handle the creation of short URLs.
     """
 
-    template_name = 'smllr/shorturl_list.html'
+    template_name = "smllr/shorturl_list.html"
     form_class = ShortURLForm
-    success_url = '/'
+    success_url = "/"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        page = self.request.GET.get('page', 1)
-        queryset = ShortURL.objects.order_by('-created_at')
+        page = self.request.GET.get("page", 1)
+        queryset = ShortURL.objects.order_by("-created_at")
 
         if self.request.user.is_anonymous:
             user_ip_address = self.request.fingerprint.ip_address
@@ -74,10 +73,12 @@ class ShortURLFormView(FormView):
 
         paginator = Paginator(queryset, 10)
 
-        context.update({
-            'paginator': paginator,
-            'shorturls_list': paginator.get_page(page),
-        })
+        context.update(
+            {
+                "paginator": paginator,
+                "shorturls_list": paginator.get_page(page),
+            }
+        )
 
         return context
 
@@ -97,13 +98,13 @@ class ShortURLFormView(FormView):
                 if queryset.exists():
                     user = queryset.first()
                 else:
-                    user = User.objects.create_anonymous(user_ip_address)
+                    user = User.objects.create_anonymous(ip_address=user_ip_address)
 
             ShortURL.objects.create(
                 user=user,
-                destination_url=form.cleaned_data['destination_url'],
-                name=form.cleaned_data['name'],
-                short_code=form.cleaned_data['short_code']
+                destination_url=form.cleaned_data["destination_url"],
+                name=form.cleaned_data["name"],
+                short_code=form.cleaned_data["short_code"],
             )
         except Exception as ex:
             logger.error("Error creating short URL", ex, exc_info=True)
@@ -130,10 +131,9 @@ class ShortURLDetailsView(NonAnonymousUserRequiredMixin, View):
 
         if short_url.user.pk != self.request.user.pk:
             return forbidden(self.request)
- 
+
         context = {
-            'shorturl': short_url,
+            "shorturl": short_url,
         }
 
-        return render(request, 'smllr/shorturl_details.html', context)
-
+        return render(request, "smllr/shorturl_details.html", context)

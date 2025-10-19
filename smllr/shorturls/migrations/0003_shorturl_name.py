@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shorturls', '0002_initial'),
+        ("shorturls", "0002_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='shorturl',
-            name='name',
-            field=models.CharField(blank=True, default='', max_length=150, null=True),
+            model_name="shorturl",
+            name="name",
+            field=models.CharField(blank=True, default="", max_length=150, null=True),
         ),
     ]

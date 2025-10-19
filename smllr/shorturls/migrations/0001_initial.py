@@ -4,32 +4,46 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='ShortURL',
+            name="ShortURL",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('destination_url', models.URLField()),
-                ('short_code', models.CharField(max_length=50, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('clicks', models.PositiveIntegerField(default=0)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("destination_url", models.URLField()),
+                ("short_code", models.CharField(max_length=50, unique=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("clicks", models.PositiveIntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
-            name='ShortURLClick',
+            name="ShortURLClick",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('clicked_at', models.DateTimeField(auto_now_add=True)),
-                ('user_agent', models.CharField(blank=True, max_length=255, null=True)),
-                ('ip_address', models.GenericIPAddressField(blank=True, null=True)),
-                ('device_type', models.CharField(blank=True, max_length=50, null=True)),
-                ('referrer', models.URLField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("clicked_at", models.DateTimeField(auto_now_add=True)),
+                ("user_agent", models.CharField(blank=True, max_length=255, null=True)),
+                ("ip_address", models.GenericIPAddressField(blank=True, null=True)),
+                ("device_type", models.CharField(blank=True, max_length=50, null=True)),
+                ("referrer", models.URLField(blank=True, null=True)),
             ],
         ),
     ]

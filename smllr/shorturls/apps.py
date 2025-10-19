@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class ShorturlsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'smllr.shorturls'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "smllr.shorturls"

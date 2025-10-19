@@ -5,16 +5,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('fingerprint', '0001_initial'),
-        ('shorturls', '0003_shorturl_name'),
+        ("fingerprint", "0001_initial"),
+        ("shorturls", "0003_shorturl_name"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='shorturlclick',
-            name='fingerprint',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='fingerprint.fingerprint'),
+            model_name="shorturlclick",
+            name="fingerprint",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                to="fingerprint.fingerprint",
+            ),
         ),
     ]
