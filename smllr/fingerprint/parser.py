@@ -20,10 +20,10 @@ class HttpRequestFingerprintParser:
         """
         Helper method to extract the IP address from the request.
         """
-        x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
+        x_forwarded_for = self.request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
-            return x_forwarded_for.split(',')[0]
-        return self.request.META.get('REMOTE_ADDR', '')
+            return x_forwarded_for.split(",")[0]
+        return self.request.META.get("REMOTE_ADDR", "")
 
     def parse(self) -> dict[str, Any]:
         """
@@ -31,14 +31,16 @@ class HttpRequestFingerprintParser:
         This method should be implemented to extract relevant data from the request.
         """
 
-        user_agent = httpagentparser.detect(self.request.META.get('HTTP_USER_AGENT', ''))
+        user_agent = httpagentparser.detect(
+            self.request.META.get("HTTP_USER_AGENT", "")
+        )
 
         return {
-            'ip_address': self.get_ip_address(),
-            'user_agent': self.request.META.get('HTTP_USER_AGENT', 'Unknown'),
-            'browser_name': user_agent.get('browser', {}).get('name', 'Unknown'),
-            'browser_version': user_agent.get('browser', {}).get('version', 'Unknown'),
-            'os': user_agent.get('os', {}).get('name', 'Unknown'),
-            'device_type': user_agent.get('dist', {}).get('name', 'Unknown'),
-            'referrer': self.request.META.get('HTTP_REFERER', 'Unknown'),
+            "ip_address": self.get_ip_address(),
+            "user_agent": self.request.META.get("HTTP_USER_AGENT", "Unknown"),
+            "browser_name": user_agent.get("browser", {}).get("name", "Unknown"),
+            "browser_version": user_agent.get("browser", {}).get("version", "Unknown"),
+            "os": user_agent.get("os", {}).get("name", "Unknown"),
+            "device_type": user_agent.get("dist", {}).get("name", "Unknown"),
+            "referrer": self.request.META.get("HTTP_REFERER", "Unknown"),
         }

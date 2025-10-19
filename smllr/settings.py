@@ -27,17 +27,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o9r=_&sgxo@aagjyxh7%7pa=qiktyg-$-)e5s6zefg+m26v-42'
+SECRET_KEY = "django-insecure-o9r=_&sgxo@aagjyxh7%7pa=qiktyg-$-)e5s6zefg+m26v-42"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', 'yes', '1']
+DEBUG = os.getenv("DEBUG", "True").lower() in ["true", "yes", "1"]
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
-PUBLIC_URL = os.getenv('PUBLIC_URL', 'http://127.0.0.1:8000')
+PUBLIC_URL = os.getenv("PUBLIC_URL", "http://127.0.0.1:8000")
 
 # CSRF for production
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    "CSRF_TRUSTED_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000"
+).split(",")
 
 # Logging
 logging.basicConfig(
@@ -47,84 +49,84 @@ logging.basicConfig(
 # Application definition
 
 INSTALLED_APPS = [
-    'smllr.core',
-    'smllr.shorturls',
-    'smllr.fingerprint',
-    'smllr.users',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "smllr.core",
+    "smllr.shorturls",
+    "smllr.fingerprint",
+    "smllr.users",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.github",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 ]
 
 MIDDLEWARE = [
-    'smllr.fingerprint.middlewares.RequestFingerprintMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    "smllr.fingerprint.middlewares.RequestFingerprintMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
-ROOT_URLCONF = 'smllr.urls'
+ROOT_URLCONF = "smllr.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'smllr' / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'smllr.shorturls.context_processors.conf',
-                'smllr.users.context_processors.social_account',
-                'smllr.users.context_processors.feature_toggle',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "smllr" / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "smllr.shorturls.context_processors.conf",
+                "smllr.users.context_processors.social_account",
+                "smllr.users.context_processors.feature_toggle",
             ],
         },
     },
 ]
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'smllr' / 'static',
+    BASE_DIR / "smllr" / "static",
 ]
 
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / "static"
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
-WSGI_APPLICATION = 'smllr.wsgi.application'
+WSGI_APPLICATION = "smllr.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
-if os.getenv('DATABASE_ENGINE') == 'postgresql':
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME', 'smllr'),
-        'USER': os.getenv('DATABASE_USER', 'root'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'root'),
-        'HOST': os.getenv('DATABASE_HOST', 'localhost'),
-        'PORT': os.getenv('DATABASE_PORT', '5432'),
+if os.getenv("DATABASE_ENGINE") == "postgresql":
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DATABASE_NAME", "smllr"),
+        "USER": os.getenv("DATABASE_USER", "root"),
+        "PASSWORD": os.getenv("DATABASE_PASSWORD", "root"),
+        "HOST": os.getenv("DATABASE_HOST", "localhost"),
+        "PORT": os.getenv("DATABASE_PORT", "5432"),
     }
 
 
@@ -133,31 +135,31 @@ if os.getenv('DATABASE_ENGINE') == 'postgresql':
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 
 # Custom user model
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = "users.User"
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -167,87 +169,94 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Short URL created by anonymous users limit
 
 MAX_SHORTURLS_PER_ANON_USER = 5
 
-SHORTURL_EXPIRATION_TIME_DAYS = int(os.getenv('SHORTURL_EXPIRATION_TIME_DAYS', 30))
+SHORTURL_EXPIRATION_TIME_DAYS = int(os.getenv("SHORTURL_EXPIRATION_TIME_DAYS", 30))
 
 # Django Allauth settings
 
-ALLOW_SOCIAL_LOGIN = os.getenv('ALLOW_SOCIAL_LOGIN', 'True').lower() in ['true', 'yes', '1']
+ALLOW_SOCIAL_LOGIN = os.getenv("ALLOW_SOCIAL_LOGIN", "True").lower() in [
+    "true",
+    "yes",
+    "1",
+]
 
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
+        "AUTH_PARAMS": {
+            "access_type": "online",
         },
-        'OAUTH_PKCE_ENABLED': True,
-        'FETCH_USERINFO' : True,
-        'APPS': [
+        "OAUTH_PKCE_ENABLED": True,
+        "FETCH_USERINFO": True,
+        "APPS": [
             {
-                'client_id': os.getenv('GOOGLE_CLIENT_ID', 'your-client-id'),
-                'secret': os.getenv('GOOGLE_CLIENT_SECRET', 'your-client-secret'),
+                "client_id": os.getenv("GOOGLE_CLIENT_ID", "your-client-id"),
+                "secret": os.getenv("GOOGLE_CLIENT_SECRET", "your-client-secret"),
             }
         ],
     },
-    'github': {
-        'SCOPE': [
-            'read:user',
-            'user:email',
+    "github": {
+        "SCOPE": [
+            "read:user",
+            "user:email",
         ],
-        'OAUTH_PKCE_ENABLED': True,
-        'FETCH_USERINFO' : True,
-        'APPS': [
+        "OAUTH_PKCE_ENABLED": True,
+        "FETCH_USERINFO": True,
+        "APPS": [
             {
-                'client_id': os.getenv('GITHUB_CLIENT_ID', 'your-client-id'),
-                'secret': os.getenv('GITHUB_CLIENT_SECRET', 'your-client-secret'),
+                "client_id": os.getenv("GITHUB_CLIENT_ID", "your-client-id"),
+                "secret": os.getenv("GITHUB_CLIENT_SECRET", "your-client-secret"),
             }
-        ]
-    }
+        ],
+    },
 }
 
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 
-SOCIALACCOUNT_ADAPTER = 'smllr.users.adapters.SocialAccountAdapter'
+SOCIALACCOUNT_ADAPTER = "smllr.users.adapters.SocialAccountAdapter"
 
-ACCOUNT_ADAPTER = 'smllr.users.adapters.AccountAdapter'
+ACCOUNT_ADAPTER = "smllr.users.adapters.AccountAdapter"
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
 
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
 SOCIALACCOUNT_ONLY = True
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if os.getenv('USE_HTTPS', 'False').lower() in ['true', 'yes', '1'] else 'http'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = (
+    "https"
+    if os.getenv("USE_HTTPS", "False").lower() in ["true", "yes", "1"]
+    else "http"
+)
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Caching
 
 REDIS = {
-    'host': os.getenv('REDIS_HOST', 'localhost'),
-    'port': int(os.getenv('REDIS_PORT', '6379')),
-    'username': os.getenv('REDIS_USERNAME'),
-    'password': os.getenv('REDIS_PASSWORD'),
+    "host": os.getenv("REDIS_HOST", "localhost"),
+    "port": int(os.getenv("REDIS_PORT", "6379")),
+    "username": os.getenv("REDIS_USERNAME"),
+    "password": os.getenv("REDIS_PASSWORD"),
 }
 
 # Message queue
 
 CELERY_BROKER_URL = os.getenv("MESSAGE_BROKER_URL", "amqp://guest:guest@localhost:5672")
-

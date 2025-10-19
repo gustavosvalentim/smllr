@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('fingerprint', '0003_fingerprint_user_agent'),
+        ("fingerprint", "0003_fingerprint_user_agent"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='fingerprint',
-            name='user_agent',
+            model_name="fingerprint",
+            name="user_agent",
             field=models.CharField(blank=True, max_length=512, null=True),
         ),
     ]

@@ -4,15 +4,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('fingerprint', '0002_fingerprint_browser_name_fingerprint_browser_version_and_more'),
+        (
+            "fingerprint",
+            "0002_fingerprint_browser_name_fingerprint_browser_version_and_more",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='fingerprint',
-            name='user_agent',
+            model_name="fingerprint",
+            name="user_agent",
             field=models.CharField(blank=True, max_length=45, null=True),
         ),
     ]

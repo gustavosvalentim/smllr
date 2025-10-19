@@ -19,7 +19,9 @@ def save_shorturl_click(shortcode: str, fingerprint_id: int):
     fingerprint = Fingerprint.objects.filter(pk=fingerprint_id).first()
 
     if not fingerprint:
-        logger.error(f"Fingerprint for code {shortcode} with ID {fingerprint_id} was not found")
+        logger.error(
+            f"Fingerprint for code {shortcode} with ID {fingerprint_id} was not found"
+        )
         return
 
     shorturl.increment_clicks()
@@ -28,4 +30,3 @@ def save_shorturl_click(shortcode: str, fingerprint_id: int):
         fingerprint=fingerprint,
     )
     shorturl_click.save()
- 

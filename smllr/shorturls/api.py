@@ -9,60 +9,24 @@ from smllr.users.mixins import NonAnonymousUserRequiredMixin
 
 
 class AnalyticsAPIView(NonAnonymousUserRequiredMixin, View):
+    def get(self, request: HttpRequest, short_code: str) -> HttpResponse:
+        short_url_exists = ShortURL.objects.filter(short_code=short_code).exists()
 
-    # TODO: caching?
-    # use a refresh time and set cache to expire after refresh time
-    # even if this is a few seconds, it's worth it
-    def _get_latest_clicks(self, clicks: list[ShortURLClick]):
-        latest_clicks = []
-        for click in clicks[:10]:
-            latest_clicks.append({
-                'clicked_at': click.clicked_at.strftime("%Y/%m/%d"),
-                'user_agent': click.fingerprint.user_agent,
-                'ip_address': click.fingerprint.ip_address,
-                'device_type': click.fingerprint.device_type,
-                'referrer': click.fingerprint.referrer,
-                'os': click.fingerprint.os,
-                'browser_name': click.fingerprint.browser_name,
-                'browser_version': click.fingerprint.browser_version,
-            })
-
-        return {
-            'latest_clicks': latest_clicks,
-        }
-
-    def _get_clicks_by_platform(self, clicks: list[ShortURLClick]):
-        return {
-            'windows_clicks': clicks.filter(fingerprint__os__contains='Windows').count(),
-            'linux_clicks': clicks.filter(fingerprint__os__contains='Linux').count(),
-            'android_clicks': clicks.filter(fingerprint__os__contains='Android').count(),
-        }
-
-    def _get_clicks_by_source(self, clicks: list[ShortURLClick]):
-        return {
-            'instagram_clicks': clicks.filter(fingerprint__referrer__contains='instagram').count(),
-            'facebook_clicks': clicks.filter(fingerprint__referrer__contains='facebook').count(),
-        }
-
-    def get(self, request: HttpRequest, short_code: str):
-        short_url = ShortURL.objects.filter(short_code=short_code).first()
-
-        if not short_url:
+        if not short_url_exists:
             return not_found(request)
 
-        clicks = ShortURLClick.objects.filter(short_url=short_url).order_by('-clicked_at')
+        clicks = ShortURLClick.objects.get_queryset(short_code)
         analytics = {
-            'latest_clicks': self._get_latest_clicks(clicks),
-            'total_clicks': clicks.count(),
+            "total_clicks": clicks.count(),
         }
 
-        analytics.update(self._get_latest_clicks(clicks))
-        analytics.update(self._get_clicks_by_platform(clicks))
-        analytics.update(self._get_clicks_by_source(clicks))
+        analytics.update(ShortURLClick.objects.get_latest_clicks(short_code))
+        analytics.update(ShortURLClick.objects.get_clicks_by_platform(short_code))
+        analytics.update(ShortURLClick.objects.get_clicks_by_source(clicks))
 
         response = HttpResponse()
         response.status_code = 200
-        response.content = json.dumps(analytics) 
-        response['Content-Type'] = 'application/json'
+        response.content = json.dumps(analytics)
+        response["Content-Type"] = "application/json"
 
         return response

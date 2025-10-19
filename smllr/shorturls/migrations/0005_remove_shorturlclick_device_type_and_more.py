@@ -4,26 +4,25 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shorturls', '0004_shorturlclick_fingerprint'),
+        ("shorturls", "0004_shorturlclick_fingerprint"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='shorturlclick',
-            name='device_type',
+            model_name="shorturlclick",
+            name="device_type",
         ),
         migrations.RemoveField(
-            model_name='shorturlclick',
-            name='ip_address',
+            model_name="shorturlclick",
+            name="ip_address",
         ),
         migrations.RemoveField(
-            model_name='shorturlclick',
-            name='referrer',
+            model_name="shorturlclick",
+            name="referrer",
         ),
         migrations.RemoveField(
-            model_name='shorturlclick',
-            name='user_agent',
+            model_name="shorturlclick",
+            name="user_agent",
         ),
     ]
