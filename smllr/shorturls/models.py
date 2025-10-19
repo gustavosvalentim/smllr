@@ -52,14 +52,14 @@ class ShortURL(models.Model):
 
 
 class ShortURLClickManager(Manager):
-    def get_queryset(self, short_code: str) -> models.QuerySet["ShortURLClick"]:
+    def get_analytics_queryset(self, short_code: str) -> models.QuerySet["ShortURLClick"]:
         return self.filter(
             short_url__short_code=short_code,
             clicked_at__gte=datetime.now() - timedelta(days=90),
         )
 
     def get_latest_clicks(self, short_code: str) -> dict[str, list[dict[str, str]]]:
-        clicks = self.get_queryset(short_code)
+        clicks = self.get_analytics_queryset(short_code)
         latest_clicks = []
         for click in clicks:
             latest_clicks.append(
@@ -80,7 +80,7 @@ class ShortURLClickManager(Manager):
         }
 
     def get_clicks_by_platform(self, short_code: str) -> dict[str, int]:
-        clicks = self.get_queryset(short_code)
+        clicks = self.get_analytics_queryset(short_code)
         return {
             "windows_clicks": clicks.filter(fingerprint__os__contains="Windows").count(),
             "linux_clicks": clicks.filter(fingerprint__os__contains="Linux").count(),
@@ -88,7 +88,7 @@ class ShortURLClickManager(Manager):
         }
 
     def get_clicks_by_source(self, short_code: str) -> dict[str, int]:
-        clicks = self.get_queryset(short_code)
+        clicks = self.get_analytics_queryset(short_code)
         return {
             "instagram_clicks": clicks.filter(fingerprint__referrer__contains="instagram").count(),
             "facebook_clicks": clicks.filter(fingerprint__referrer__contains="facebook").count(),

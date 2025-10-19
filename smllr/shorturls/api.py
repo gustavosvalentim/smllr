@@ -15,14 +15,14 @@ class AnalyticsAPIView(NonAnonymousUserRequiredMixin, View):
         if not short_url_exists:
             return not_found(request)
 
-        clicks = ShortURLClick.objects.get_queryset(short_code)
+        clicks = ShortURLClick.objects.get_analytics_queryset(short_code)
         analytics = {
             "total_clicks": clicks.count(),
         }
 
         analytics.update(ShortURLClick.objects.get_latest_clicks(short_code))
         analytics.update(ShortURLClick.objects.get_clicks_by_platform(short_code))
-        analytics.update(ShortURLClick.objects.get_clicks_by_source(clicks))
+        analytics.update(ShortURLClick.objects.get_clicks_by_source(short_code))
 
         response = HttpResponse()
         response.status_code = 200
