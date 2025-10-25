@@ -38,8 +38,6 @@ class SubscriptionSettingsView(TemplateView, NonAnonymousUserRequiredMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        subscription = self.subscription_manager.get_subscription_by_email(
-            self.request.user.email
-        )
+        subscription = self.subscription_manager.get_subscription_by_email(self.request.user.email)
         context.update({"subscription": subscription})
         return context
