@@ -1,6 +1,7 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import Group, UserAdmin
 
+from smllr.users.forms import GroupAdminForm
 from smllr.users.models import User
 
 
@@ -48,3 +49,13 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
+
+admin.site.unregister(Group)
+
+
+class GroupAdmin(admin.ModelAdmin):
+    form = GroupAdminForm
+    filter_horizontal = ["permissions"]
+
+
+admin.site.register(Group, GroupAdmin)

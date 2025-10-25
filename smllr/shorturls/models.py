@@ -37,6 +37,9 @@ class ShortURL(models.Model):
 
     objects: ShortURLManager = ShortURLManager()
 
+    class Meta:
+        permissions = [("view_shorturl_analytics", "View Short URL analytics")]
+
     def __str__(self):
         return f"{self.name} - {self.short_code}"
 
@@ -56,7 +59,7 @@ class ShortURLClickManager(Manager):
         return self.filter(
             short_url__short_code=short_code,
             clicked_at__gte=datetime.now() - timedelta(days=90),
-        )
+        ).order_by("-clicked_at")
 
     def get_latest_clicks(self, short_code: str) -> dict[str, list[dict[str, str]]]:
         clicks = self.get_analytics_queryset(short_code)

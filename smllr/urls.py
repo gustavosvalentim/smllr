@@ -22,4 +22,5 @@ urlpatterns = [
     path("site-admin/", admin.site.urls),
     path("", include("smllr.shorturls.urls")),
     path("accounts/", include("allauth.urls")),
+    path("subscriptions/", include("smllr.subscriptions.urls")),
 ]

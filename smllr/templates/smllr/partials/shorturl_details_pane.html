@@ -1,9 +1,9 @@
-<div class="flex flex-col items-start border-2 shadow-lg rounded-lg px-6 py-4">
+<div class="flex flex-col items-start border-2 shadow-lg rounded-lg px-6 py-4 bg-white">
   <div class="flex justify-between items-center w-full">
     <h1 class="text-lg font-bold">{{ shorturl.name|default:shorturl.short_code }}</h1>
 
     <div class="flex justify-between">
-      <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded mr-2"
+      <button class="bg-primary/90 hover:bg-primary text-white font-semibold py-2 px-4 rounded mr-2"
         @click="refresh()">
         <i class="fas fa-rotate"></i>
     </div>
@@ -12,14 +12,14 @@
   <div class="grid grid-cols-3 gap-12 w-full">
     <div class="flex flex-col gap-8 mt-2">
       <div class="flex flex-col justify-between gap-1">
-        <span class="text-gray-500 font-bold text-md">Short URL</span>
+        <span class="text-black font-bold text-md">Short URL</span>
         <a href="{{ settings.public_url }}/{{ shorturl.short_code }}" class="hover:underline">
           {{ settings.public_url }}/{{ shorturl.short_code }}
         </a>
         <span class="hidden" id="shorturl_code">{{ shorturl.short_code }}</span>
       </div>
       <div class="flex flex-col justify-between gap-1">
-        <span class="text-gray-500 font-bold text-md">Original URL</span>
+        <span class="text-black font-bold text-md">Original URL</span>
         <a class="hover:underline" href="{{ shorturl.destination_url }}">
           {{ shorturl.destination_url }}
         </a>
@@ -28,11 +28,11 @@
 
     <div class="flex flex-col gap-8 mt-2">
       <div class="flex flex-col justify-between gap-1">
-        <span class="text-gray-500 font-bold text-md">Created at</span>
-        <span class="text-md">{{ shorturl.created_at }}</span>
+        <span class="text-black font-bold text-md">Created at</span>
+        <span class="text-md">{{ shorturl.created_at|date:"Y/m/d H:i" }}</span>
       </div>
       <div class="flex flex-col justify-between gap-1">
-        <span class="text-gray-500 font-bold text-md">Total clicks</span>
+        <span class="text-black font-bold text-md">Total clicks</span>
         <span class="text-md" x-text="totalClicks">0</span>
       </div>
     </div>

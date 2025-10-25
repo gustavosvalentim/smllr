@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "smllr.shorturls",
     "smllr.fingerprint",
     "smllr.users",
+    "smllr.subscriptions",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -241,9 +242,7 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_ONLY = True
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = (
-    "https"
-    if os.getenv("USE_HTTPS", "False").lower() in ["true", "yes", "1"]
-    else "http"
+    "https" if os.getenv("USE_HTTPS", "False").lower() in ["true", "yes", "1"] else "http"
 )
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -260,3 +259,26 @@ REDIS = {
 # Message queue
 
 CELERY_BROKER_URL = os.getenv("MESSAGE_BROKER_URL", "amqp://guest:guest@localhost:5672")
+
+# Stripe
+
+STRIPE_CLIENT = {
+    "secret_key": os.getenv("STRIPE_SECRET_KEY"),
+    "publishable_key": os.getenv("SRIPE_PUBLISHABLE_KEY"),
+}
+
+STRIPE_CHECKOUT = {
+    "subscriptions": [
+        {
+            "price_id": os.getenv("STRIPE_BASIC_SUB_PRICE_ID"),
+            "price_value": 25.0,
+            "subscription_level": "basic",
+        },
+        {
+            "price_id": os.getenv("STRIPE_BASIC_SUB_PRICE_ID"),
+            "price_value": 25.0,
+            "subscription_level": "pro",
+        },
+    ],
+    "post_checkout_redirect_url": "http://localhost:8000/subscriptions/post-checkout",
+}

@@ -1,5 +1,3 @@
-from typing import Type
-
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 
@@ -41,7 +39,7 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     is_anonymous = models.BooleanField(default=True)
 
-    objects: Type[CustomUserManager] = CustomUserManager()
+    objects: CustomUserManager = CustomUserManager()
 
     username = models.CharField(max_length=50, null=True, blank=True)
 
