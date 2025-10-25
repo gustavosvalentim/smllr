@@ -280,5 +280,5 @@ STRIPE_CHECKOUT = {
             "subscription_level": "pro",
         },
     ],
-    "post_checkout_redirect_url": "http://localhost:8000/subscriptions/post-checkout",
+    "post_checkout_redirect_url": f"{PUBLIC_URL}/subscriptions/post-checkout",
 }
