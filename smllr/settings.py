@@ -275,8 +275,8 @@ STRIPE_CHECKOUT = {
             "subscription_level": "basic",
         },
         {
-            "price_id": os.getenv("STRIPE_BASIC_SUB_PRICE_ID"),
-            "price_value": 25.0,
+            "price_id": os.getenv("STRIPE_PRO_SUB_PRICE_ID"),
+            "price_value": 50.0,
             "subscription_level": "pro",
         },
     ],
