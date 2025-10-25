@@ -5,37 +5,39 @@
 
 {% block content %}
 
-<div class="container mx-auto" x-data="analyticsData()" x-init="init()">
+<div class="container mx-auto mt-4" x-data="analyticsData()" x-init="init()">
   {% include 'smllr/partials/shorturl_details_pane.html' %}
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-4">
-    <div class="flex flex-col border-2 shadow-lg rounded-lg">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+    <div class="flex flex-col border-2 shadow-lg rounded-lg h-96 bg-white">
       <div class="border-b-1 shadow-lg px-4 py-2 mb-2">
         <h3 class="font-bold text-lg">Latest clicks</h3>
       </div>
-      <table class="mx-auto text-left w-full">
-        <thead class="border-b-1">
-          <tr class="bg-muted/50">
-            <th class="px-6 py-3">Ip address</th>
-            <th class="px-6 py-3">Platform</th>
-            <th class="px-6 py-3">Browser</th>
-            <th class="px-6 py-3">Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template x-for="click in latestClicks">
-            <tr class="hover:bg-muted/30">
-              <td class="px-6 py-3" x-text="click.ip_address" />
-              <td class="px-6 py-3" x-text="click.os" />
-              <td class="px-6 py-3" x-text="click.browser_name" />
-              <td class="px-6 py-3" x-text="click.clicked_at" />
+      <div class="overflow-y-scroll h-full">
+        <table class="mx-auto text-left w-full">
+          <thead class="border-b-1">
+            <tr class="bg-muted/50">
+              <th class="px-6 py-3">Ip address</th>
+              <th class="px-6 py-3">Platform</th>
+              <th class="px-6 py-3">Browser</th>
+              <th class="px-6 py-3">Date</th>
             </tr>
-          </template>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <template x-for="click in latestClicks">
+              <tr class="hover:bg-muted/30">
+                <td class="px-6 py-3" x-text="click.ip_address" />
+                <td class="px-6 py-3" x-text="click.os" />
+                <td class="px-6 py-3" x-text="click.browser_name" />
+                <td class="px-6 py-3" x-text="click.clicked_at" />
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="flex flex-col border-2 shadow-lg rounded-lg">
+    <div class="flex flex-col border-2 shadow-lg rounded-lg overflow-y-auto h-96 bg-white">
       <div class="border-b-1 shadow-lg px-4 py-2 mb-2">
         <h3 class="font-bold text-lg">Clicks by source</h3>
       </div>
@@ -59,7 +61,7 @@
       </table>
     </div>
 
-    <div class="flex flex-col max-h-140 md:max-h-128 border-2 shadow-lg rounded-lg">
+    <div class="flex flex-col max-h-140 md:max-h-128 border-2 shadow-lg rounded-lg overflow-y-auto bg-white">
       <div class="border-b-1 shadow-lg px-4 py-2 mb-2">
         <h3 class="font-bold text-lg">Clicks by platform</h3>
       </div>

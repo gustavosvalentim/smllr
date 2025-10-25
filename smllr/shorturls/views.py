@@ -11,6 +11,7 @@ from smllr.core.response import forbidden, not_found
 from smllr.shorturls.tasks import save_shorturl_click
 from smllr.shorturls.forms import ShortURLForm
 from smllr.shorturls.models import ShortURL, User
+from smllr.subscriptions.mixins import ProSubscriptionRequiredMixin
 from smllr.users.mixins import NonAnonymousUserRequiredMixin
 
 
@@ -114,7 +115,7 @@ class ShortURLFormView(FormView):
         return super().form_valid(form)
 
 
-class ShortURLDetailsView(NonAnonymousUserRequiredMixin, View):
+class ShortURLDetailsView(NonAnonymousUserRequiredMixin, ProSubscriptionRequiredMixin, View):
     """
     View to handle the analytics of short URLs.
     """

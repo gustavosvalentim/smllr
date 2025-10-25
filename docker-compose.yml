@@ -22,6 +22,10 @@ services:
       REDIS_USERNAME: ${REDIS_USERNAME}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       MESSAGE_BROKER_URL: amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+      STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_BASIC_SUB_PRICE_ID: ${STRIPE_BASIC_SUB_PRICE_ID}
+      STRIPE_PRO_SUB_PRICE_ID: ${STRIPE_PRO_SUB_PRICE_ID}
     ports:
       - "8080:8000"
     links:
@@ -76,24 +80,18 @@ services:
   redis:
     image: redis/redis-stack-server:latest
     environment:
-      VALKEY_EXTRA_ARGS: "--requirepass ${REDIS_PASSWORD}"
+      REDIS_ARGS: "--requirepass ${REDIS_PASSWORD}"
     ports:
       - "6379:6379"
 
   rabbitmq:
-    image: rabbitmq:3
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
-    ports:
-      - "5672:5672"
-
-  rabbitmq-management:
-    image: rabbitmq:3-management
-    ports:
-      - "15672:15672"
-    depends_on:
-      - rabbitmq
 
 volumes:
   postgres_data:

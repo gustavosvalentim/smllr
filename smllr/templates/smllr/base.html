@@ -9,6 +9,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Smllr{% endblock %}</title>
+  
+  <!-- favicon -->
+  <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{% static 'css/smllr.css' %}">
@@ -29,8 +32,8 @@
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
-<body class="flex flex-col min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
-  <nav class="p-4 shadow-md">
+<body class="flex flex-col min-h-screen bg-gray-100">
+  <nav class="p-4 shadow-md bg-white">
     <div class="flex items-center justify-between gap-8 mx-auto container">
       <a href="{% url 'shorturls_form' %}" class="text-2xl font-semibold">Smllr</a>
       {% if not user.is_authenticated %}
@@ -39,25 +42,47 @@
         Sign in
       </button>
       {% else %}
-      <div class="flex gap-4">
-        <div class="flex items-center">
-          {% if socialaccount.picture %}
-          <img src="{{ socialaccount.picture }}" alt="User picture"
-            class="rounded-full max-w-11 border-2 border-primary">
-          {% else %}
-          <span class="text-white px-2 py-2 bg-primary rounded-full">
-            {{user.first_name|slice:"0:1"}}{{user.last_name|slice:"0:1"}}
-          </span>
-          {% endif %}
-        </div>
+      <div class="relative inline-block">
+        <button id="user-menu-dropdown-button" data-dropdown-toggle="user-menu-dropdown">
+          <div class="flex items-center">
+            {% if socialaccount.picture %}
+            <img src="{{ socialaccount.picture }}" alt="User picture"
+              class="rounded-full max-w-11 border-2 border-primary">
+            {% else %}
+            <span class="text-white px-2 py-2 bg-primary rounded-full">
+              {{user.first_name|slice:"0:1"}}{{user.last_name|slice:"0:1"}}
+            </span>
+            {% endif %}
+          </div>
+        </button>
 
-        <form method="post" action="{% url 'account_logout' %}">
-          {% csrf_token %}
-          <button type="submit" class="bg-primary duration-300 rounded-full text-white px-4 py-2">Sign
-            out</button>
-        </form>
+        <div id="user-menu-dropdown" class="absolute origin-top-right left-[-228px] z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-64 dark:bg-gray-700 dark:divide-gray-600" role="menu" aria-labelledby="user-menu-dropdown-button">
+          <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+            <div>{{ user.first_name }} {{user.last_name}}</div>
+            <div class="font-medium truncate">{{user.email}}</div>
+          </div>
+
+          <div class="px-3 py-2 text-sm">
+            <div class="px-1 py-2 rounded-sm hover:cursor-pointer hover:bg-muted/30">
+              <a href="{% url 'subscription-settings' %}">
+                Subscription
+              </a>
+            </div>
+            <div class="px-1 py-2 rounded-sm hover:cursor-pointer hover:bg-muted/30">Settings</div>
+          </div>
+
+          <div class="hover:bg-muted/30 hover:cursor-pointer px-4 py-3">
+            <form method="post" action="{% url 'account_logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="text-sm">
+                Sign Out
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
       {% endif %}
+    </div>
   </nav>
 
   <main class="mt-2 grow">
@@ -75,6 +100,15 @@
 
   {% block scripts %}
   {% endblock %}
+
+  <script type="text/javascript">
+    const userMenuDropdownTrigger = document.getElementById("user-menu-dropdown-button");
+
+    userMenuDropdownTrigger.addEventListener("click", (event) => {
+      const userMenuDropdown = document.getElementById(event.currentTarget.dataset.dropdownToggle);
+      userMenuDropdown.classList.toggle("hidden");
+    });
+  </script>
 </body>
 
 </html>

@@ -1,0 +1,41 @@
+
+{% extends 'smllr/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto mt-4">
+  <div class="flex flex-col items-start border-2 shadow-lg rounded-lg px-6 py-4 bg-white">
+    <div class="mb-2">
+      <h1 class="text-lg font-bold">{{request.user.first_name}} {{request.user.last_name}}</h1>
+    </div>
+
+    <div class="grid grid-cols-3 w-full gap-8">
+      <div class="flex flex-col justify-between gap-1">
+        <span class="font-bold">Subscription</span>
+        <span>{{subscription.type|upper}}</span>
+      </div>
+
+      <div class="flex flex-col justify-between gap-1">
+        <span class="font-bold">Billing cycle</span>
+        <span>{{subscription.billing_cycle|title}}ly</span>
+      </div>
+
+      <div class="flex flex-col justify-between gap-1">
+        <span class="font-bold">Started at</span>
+        <span>{{subscription.started_at|date:'Y/m/d H:i'}}</span>
+      </div>
+
+      <div class="flex flex-col justify-between gap-1">
+        <span class="font-bold">Amount</span>
+        <span>{{subscription.amount}}</span>
+      </div>
+
+      <div class="flex flex-col justify-between gap-1">
+        <span class="font-bold">Currency</span>
+        <span>{{subscription.currency|upper}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
