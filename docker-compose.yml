@@ -3,7 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    env_file: .env
     environment:
       DEBUG: ${DEBUG}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
@@ -38,12 +37,13 @@ services:
       - rabbitmq
     volumes:
       - /var/www/smllr:/app/static
+    profiles:
+      - prd
 
   webapp-celery:
     build:
       context: .
       dockerfile: celery.Dockerfile
-    env_file: .env
     environment:
       DEBUG: ${DEBUG}
       DATABASE_ENGINE: ${DATABASE_ENGINE}
@@ -65,6 +65,20 @@ services:
       - postgres
       - redis
       - rabbitmq
+    profiles:
+      - prd
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    profiles:
+      - dev
+      - prd
 
   postgres:
     image: postgres:latest
@@ -76,6 +90,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    profiles: 
+      - dev
 
   redis:
     image: redis/redis-stack-server:latest
@@ -83,15 +99,8 @@ services:
       REDIS_ARGS: "--requirepass ${REDIS_PASSWORD}"
     ports:
       - "6379:6379"
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    profiles:
+      - dev
 
 volumes:
   postgres_data:
