@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smllr
+  namespace: smllr
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: smllr
+  template:
+    metadata:
+      labels:
+        app: smllr
+    spec:
+      containers:
+        - name: smllr
+          image: smllr:dev
+          imagePullPolicy: Never 
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+              scheme: HTTP
+            initialDelaySeconds: 10
+          env:
+            - name: PUBLIC_URL
+              value: http://localhost:8080
+            - name: ALLOWED_HOSTS
+              value: localhost,127.0.0.1
+            - name: CSRF_TRUSTED_ORIGINS
+              value: http://localhost:8080
+            - name: DEBUG
+              value: "False"

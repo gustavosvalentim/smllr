@@ -1,0 +1,41 @@
+providers:
+  kubernetesGateway:
+    enabled: true
+    namespaces:
+      - default
+      - traefik
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    matchRule: PathPrefix(`/dashboard`)
+    entryPoints:
+      - web
+
+api:
+  dashboard: true
+  insecure: true
+
+service:
+  type: NodePort
+
+ports:
+  traefik:
+    expose:
+      default: true
+    nodePort: 32090
+  web:
+    nodePort: 32080
+  websecure:
+    nodePort: 32443
+
+gateway:
+  listeners:
+    web:
+      namespacePolicy:
+        from: All
+
+additionalArguments:
+  - "--api.insecure=true"
+  - "--api.dashboard=true"
+  - "--api.debug=true"

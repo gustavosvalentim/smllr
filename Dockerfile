@@ -29,3 +29,5 @@ EXPOSE 8000
 
 ENTRYPOINT ["/bin/sh", "/app/scripts/entrypoint.sh"]
 
+CMD ["--bind=0.0.0.0:8080", "--workers=2"]
+
