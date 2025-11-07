@@ -27,6 +27,7 @@ class RedisConnectionConfiguration(TypedDict):
 class RedisConnectionFactory:
     current_connection: Redis | None = None
 
+    @staticmethod
     def _create_connection(config: RedisConnectionConfiguration) -> Redis:
         try:
             conn = Redis(
@@ -38,15 +39,13 @@ class RedisConnectionFactory:
             return conn
         except Exception as err:
             logger.error("Error creating connection with Redis", err, exc_info=True)
-            raise Exception(
-                f"Error connecting to Redis at {config['host']}:{config['port']}"
-            )
+            raise Exception(f"Error connecting to Redis at {config['host']}:{config['port']}")
 
     @staticmethod
     def get() -> Redis:
         if RedisConnectionFactory.current_connection is None:
-            RedisConnectionFactory.current_connection = (
-                RedisConnectionFactory._create_connection(settings.REDIS)
+            RedisConnectionFactory.current_connection = RedisConnectionFactory._create_connection(
+                settings.REDIS
             )
         return RedisConnectionFactory.current_connection
 
@@ -59,13 +58,13 @@ class ShortURLCache:
         self.create_index()
 
     def create_index(self):
-        schema = (
+        schema = [
             NumericField("url_id"),
             TextField("code"),
             TextField("url"),
             NumericField("created_at"),
             NumericField("user_id"),
-        )
+        ]
         try:
             self.connection.ft(self.index_name).create_index(
                 schema,
@@ -88,15 +87,16 @@ class ShortURLCache:
     def get(self, code: str) -> ShortURL | None:
         query = Query(f"@code:{code}")
         res = self.connection.ft(self.index_name).search(query)
+        docs = getattr(res, "docs", [])
 
-        if len(res.docs) == 0:
+        if len(docs) == 0:
             return None
 
-        doc = res.docs[0]
+        doc = docs[0]
         created_at = datetime.fromtimestamp(float(doc.created_at))
 
         short_url = ShortURL(
-            user=User(pk=doc.user_id),
+            user=User.objects.only("is_anonymous").filter(pk=doc.user_id).first(),
             destination_url=doc.url,
             short_code=doc.code,
             created_at=make_aware(created_at),
