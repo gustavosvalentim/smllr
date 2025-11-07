@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: smllr
+  namespace: smllr
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/smllr`)
+      kind: Rule
+      services:
+        - name: smllr
+          port: 80

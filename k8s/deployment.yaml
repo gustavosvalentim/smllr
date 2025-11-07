@@ -28,10 +28,10 @@ spec:
             initialDelaySeconds: 10
           env:
             - name: PUBLIC_URL
-              value: http://localhost:8080
+              value: http://localhost:9000/smllr
             - name: ALLOWED_HOSTS
-              value: localhost,127.0.0.1
+              value: "*"
             - name: CSRF_TRUSTED_ORIGINS
-              value: http://localhost:8080
+              value: "*"
             - name: DEBUG
               value: "False"

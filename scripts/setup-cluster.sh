@@ -20,3 +20,5 @@ kubectl create secret tls local-selfsigned-tls \
   --namespace traefik
 
 helm install traefik traefik/traefik --namespace traefik --values ./k8s/traefik/values.yaml
+
+kubectl apply -f ./k8s/ingress-route.yaml
