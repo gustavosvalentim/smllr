@@ -29,3 +29,5 @@ EXPOSE 8000
 
 ENTRYPOINT ["/bin/sh", "/app/scripts/entrypoint.sh"]
 
+CMD ["gunicorn", "--workers", "2", "--bind", "0.0.0.0:8000", "smllr.wsgi"]
+
