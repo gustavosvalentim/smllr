@@ -31,12 +31,7 @@ services:
       STRIPE_PRO_SUB_PRICE_ID: ${STRIPE_PRO_SUB_PRICE_ID}
     ports:
       - "8080:8000"
-    links:
-      - postgres
-      - redis
-      - rabbitmq
     depends_on:
-      - postgres
       - redis
       - rabbitmq
     volumes:
@@ -59,12 +54,7 @@ services:
       REDIS_USERNAME: ${REDIS_USERNAME}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       MESSAGE_BROKER_URL: amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
-    links:
-      - postgres
-      - redis
-      - rabbitmq
     depends_on:
-      - postgres
       - redis
       - rabbitmq
 
