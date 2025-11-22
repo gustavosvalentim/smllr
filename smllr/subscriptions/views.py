@@ -34,10 +34,21 @@ class SubscriptionSettingsView(TemplateView, NonAnonymousUserRequiredMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.checkout_manager = CheckoutManager.from_settings()
         self.subscription_manager = SubscriptionManager.from_settings()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         subscription = self.subscription_manager.get_subscription_by_email(self.request.user.email)
-        context.update({"subscription": subscription})
+        basic_checkout_url = self.checkout_manager.get_checkout_url("basic")
+        pro_checkout_url = self.checkout_manager.get_checkout_url("pro")
+        context.update(
+            {
+                "subscription": subscription,
+                "checkout_urls": {
+                    "basic": basic_checkout_url,
+                    "pro": pro_checkout_url,
+                },
+            }
+        )
         return context

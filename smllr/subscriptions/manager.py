@@ -79,7 +79,7 @@ class SubscriptionManager:
 
         return {
             "type": subscription_type,
-            "amount": subscription["plan"]["amount"],
+            "amount": subscription["plan"]["amount"] // 100,
             "currency": subscription["plan"]["currency"],
             "started_at": datetime.fromtimestamp(subscription["created"]),
             "billing_cycle": subscription["plan"]["interval"],
@@ -105,8 +105,7 @@ class CheckoutManager:
         checkout_config = getattr(settings, checkout_config_key or "STRIPE_CHECKOUT")
         return CheckoutManager(client_config, checkout_config)
 
-    def get_checkout_url(self) -> str:
-        subscription_type = "pro"
+    def get_checkout_url(self, subscription_type: str = "basic") -> str:
         post_checkout_redirect_url = self.checkout_configuration.get("post_checkout_redirect_url")
         line_items = []
 

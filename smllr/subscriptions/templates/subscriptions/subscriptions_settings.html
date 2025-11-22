@@ -4,38 +4,60 @@
 {% block content %}
 
 <div class="container mx-auto mt-4">
-  <div class="flex flex-col items-start border-2 shadow-lg rounded-lg px-6 py-4 bg-white">
-    <div class="mb-2">
-      <h1 class="text-lg font-bold">{{request.user.first_name}} {{request.user.last_name}}</h1>
+  {% if not subscription %}
+    {% include 'subscriptions/subscriptions_details.html' %} 
+  {% else %}
+    <div class="grid grid-cols-3 w-full gap-12">
+      <div class="flex flex-col border-2 shadow-lg rounded-lg bg-white">
+        <div class="bg-muted/50 px-6 py-4">
+          <h3 class="text-xl font-bold">Free</h3>
+        </div>
+        <div class="bg-white px-6 py-4">
+          <h4 class="text-2xl font-bold">R$ 00,00/mo</h4>
+          <ul class="mt-2">
+            <li>Max 5 URLs</li>
+            <li>URLs expires in 30 days</li>
+          </ul>
+        </div>
+        <div class="pb-4 pt-2 px-6 mt-auto w-full">
+          <a type="button" class="text-lg w-full py-2 text-center block bg-muted rounded-lg">Subscribe</a>
+        </div>
+      </div>
+
+      <div class="flex flex-col border-2 shadow-lg rounded-lg bg-white">
+        <div class="bg-muted/50 px-6 py-4">
+          <h3 class="text-xl font-bold">Basic</h3>
+        </div>
+        <div class="bg-white px-6 py-4">
+          <h4 class="text-2xl font-bold">R$ 25,00/mo</h4>
+          <ul class="mt-2">
+            <li>Everything in <strong>free</strong></li>
+            <li>Unlimited URLs</li>
+            <li>No expiration time</li>
+          </ul>
+        </div>
+        <div class="pb-4 pt-2 px-6 mt-auto w-full">
+          <a type="button" class="text-lg py-2 text-center block bg-primary text-white rounded-lg" href="{{ checkout_urls.basic }}">Subscribe</a>
+        </div>
+      </div>
+
+      <div class="flex flex-col border-2 shadow-lg rounded-lg bg-white">
+        <div class="bg-muted/50 px-6 py-4">
+          <h3 class="text-xl font-bold">Pro</h3>
+        </div>
+        <div class="bg-white px-6 py-4">
+          <h4 class="text-2xl font-bold">R$ 50,00/mo</h4>
+          <ul class="mt-2">
+            <li>Everything in <strong>basic</strong></li>
+            <li>Analytics</li>
+          </ul>
+        </div>
+        <div class="pb-4 pt-2 px-6 mt-auto w-full">
+          <a type="button" class="text-lg py-2 text-center block bg-primary text-white rounded-lg" href="{{ checkout_urls.pro }}">Subscribe</a>
+        </div>
+      </div>
     </div>
-
-    <div class="grid grid-cols-3 w-full gap-8">
-      <div class="flex flex-col justify-between gap-1">
-        <span class="font-bold">Subscription</span>
-        <span>{{subscription.type|upper}}</span>
-      </div>
-
-      <div class="flex flex-col justify-between gap-1">
-        <span class="font-bold">Billing cycle</span>
-        <span>{{subscription.billing_cycle|title}}ly</span>
-      </div>
-
-      <div class="flex flex-col justify-between gap-1">
-        <span class="font-bold">Started at</span>
-        <span>{{subscription.started_at|date:'Y/m/d H:i'}}</span>
-      </div>
-
-      <div class="flex flex-col justify-between gap-1">
-        <span class="font-bold">Amount</span>
-        <span>{{subscription.amount}}</span>
-      </div>
-
-      <div class="flex flex-col justify-between gap-1">
-        <span class="font-bold">Currency</span>
-        <span>{{subscription.currency|upper}}</span>
-      </div>
-    </div>
-  </div>
+  {% endif %}
 </div>
 
 {% endblock %}
