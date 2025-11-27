@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container mx-auto mt-4">
-  {% if not subscription %}
+  {% if subscription %}
     {% include 'subscriptions/subscriptions_details.html' %} 
   {% else %}
     <div class="grid grid-cols-3 w-full gap-12">

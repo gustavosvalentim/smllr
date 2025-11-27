@@ -13,12 +13,12 @@ class ShortURLTestCase(TestCase):
     def test_anon_user_shorturl_limit(self):
         for i in range(settings.MAX_SHORTURLS_PER_ANON_USER):
             ShortURL.objects.create(
-                user=self.user, destination="https://smllr.io", name=f"Test {i}"
+                user=self.user, destination_url="https://smllr.io", name=f"Test {i}"
             )
 
         with self.assertRaises(Exception) as ex:
             ShortURL.objects.create(
-                user=self.user, destination="https://smllr.io", name="Error"
+                user=self.user, destination_url="https://smllr.io", name="Error"
             )
 
         self.assertEqual(ex.exception.__str__(), "You've reached your limit of URLs.")

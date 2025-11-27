@@ -6,10 +6,8 @@
     --color-red-500: oklch(63.7% 0.237 25.331);
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-blue-600: oklch(54.6% 0.245 262.881);
-    --color-blue-700: oklch(48.8% 0.243 264.376);
     --color-blue-900: oklch(37.9% 0.146 265.522);
     --color-gray-100: oklch(96.7% 0.003 264.542);
-    --color-gray-200: oklch(92.8% 0.006 264.531);
     --color-gray-300: oklch(87.2% 0.01 258.338);
     --color-gray-400: oklch(70.7% 0.022 261.325);
     --color-gray-600: oklch(44.6% 0.03 256.802);
@@ -266,9 +264,6 @@
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
   }
-  .mb-4 {
-    margin-bottom: calc(var(--spacing) * 4);
-  }
   .block {
     display: block;
   }
@@ -329,26 +324,11 @@
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
-  .grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .flex-col {
     flex-direction: column;
-  }
-  .place-content-around {
-    place-content: space-around;
-  }
-  .content-around {
-    align-content: space-around;
-  }
-  .content-between {
-    align-content: space-between;
-  }
-  .content-center {
-    align-content: center;
   }
   .items-center {
     align-items: center;
@@ -482,22 +462,10 @@
   .bg-muted {
     background-color: var(--muted);
   }
-  .bg-muted\/30 {
-    background-color: var(--muted);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--muted) 30%, transparent);
-    }
-  }
   .bg-muted\/50 {
     background-color: var(--muted);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--muted) 50%, transparent);
-    }
-  }
-  .bg-muted\/80 {
-    background-color: var(--muted);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--muted) 80%, transparent);
     }
   }
   .bg-primary {
