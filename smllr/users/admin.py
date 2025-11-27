@@ -19,7 +19,7 @@ class CustomUserAdmin(UserAdmin):
         "ip_address",
         "is_superuser",
         "is_active",
-        "is_anonymous",
+        "is_guest_user",
     )
     search_fields = (
         "email",
@@ -35,7 +35,7 @@ class CustomUserAdmin(UserAdmin):
                 "fields": (
                     "is_active",
                     "is_superuser",
-                    "is_anonymous",
+                    "is_guest_user",
                 )
             },
         ),
@@ -44,7 +44,7 @@ class CustomUserAdmin(UserAdmin):
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
         (None, {"fields": ("ip_address",)}),
-        (None, {"fields": ("is_anonymous",)}),
+        (None, {"fields": ("is_guest_user",)}),
     )
 
 

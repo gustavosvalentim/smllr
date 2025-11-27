@@ -14,7 +14,7 @@ class CustomUserManager(UserManager):
 
     def create_superuser(self, email: str, password: str, **extra_fields) -> "User":
         user = self.create_user(email, password, **extra_fields)
-        user.is_anonymous = False
+        user.is_guest_user = False
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
@@ -25,7 +25,7 @@ class CustomUserManager(UserManager):
             email=f"anon_{ip_address}@{ip_address}",
             ip_address=ip_address,
             name=ip_address,
-            is_anonymous=True,
+            is_guest_user=True,
         )
         user.set_unusable_password()
         user.save()
@@ -37,7 +37,7 @@ class User(AbstractUser):
     name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    is_anonymous = models.BooleanField(default=True)
+    is_guest_user = models.BooleanField(default=False)
 
     objects: CustomUserManager = CustomUserManager()
 

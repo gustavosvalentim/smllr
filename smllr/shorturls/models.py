@@ -1,9 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.manager import Manager
 from django.conf import settings
-from django.utils.timezone import make_aware, now
+from django.utils.timezone import now
 from django.utils.translation import gettext as _
 
 from smllr.fingerprint.models import Fingerprint
@@ -15,7 +16,7 @@ class ShortURLManager(Manager):
     def create(
         self, user: User, destination_url: str, name: str, short_code: str | None = None
     ) -> "ShortURL":
-        if user.is_anonymous:
+        if user.is_guest_user:
             if (
                 ShortURL.objects.filter(user=user).count()
                 >= settings.MAX_SHORTURLS_PER_ANON_USER
@@ -58,8 +59,12 @@ class ShortURL(models.Model):
 
     def is_expired(self) -> bool:
         expiration = timedelta(days=settings.SHORTURL_EXPIRATION_TIME_DAYS)
-        if self.user.is_anonymous:
-            return make_aware(datetime.now()) - self.created_at > expiration
+        try:
+            if self.user.is_guest_user:
+                return now() - self.created_at > expiration
+        except ObjectDoesNotExist:
+            # If user doesn't exist, treat as guest and check expiration
+            return now() - self.created_at > expiration
         return False
 
 

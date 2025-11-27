@@ -9,4 +9,4 @@ class ShortURLForm(forms.Form):
 
     destination_url = forms.URLField()
     name = forms.CharField(max_length=150, required=False)
-    short_code = forms.URLField(required=False)
+    short_code = forms.CharField(max_length=50, required=False)

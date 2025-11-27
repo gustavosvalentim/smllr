@@ -38,7 +38,7 @@ class AnalyticsAPIView(
         try:
             # Get short URL and verify ownership
             short_url = ShortURL.objects.filter(
-                short_code=short_code, user=request.user
+                short_code=short_code, user_id=request.user.pk
             ).first()
 
             if not short_url:

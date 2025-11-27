@@ -39,13 +39,15 @@ class RedisConnectionFactory:
             return conn
         except Exception as err:
             logger.error("Error creating connection with Redis", err, exc_info=True)
-            raise Exception(f"Error connecting to Redis at {config['host']}:{config['port']}")
+            raise Exception(
+                f"Error connecting to Redis at {config['host']}:{config['port']}"
+            )
 
     @staticmethod
     def get() -> Redis:
         if RedisConnectionFactory.current_connection is None:
-            RedisConnectionFactory.current_connection = RedisConnectionFactory._create_connection(
-                settings.REDIS
+            RedisConnectionFactory.current_connection = (
+                RedisConnectionFactory._create_connection(settings.REDIS)
             )
         return RedisConnectionFactory.current_connection
 
@@ -96,7 +98,7 @@ class ShortURLCache:
         created_at = datetime.fromtimestamp(float(doc.created_at))
 
         short_url = ShortURL(
-            user=User.objects.only("is_anonymous").filter(pk=doc.user_id).first(),
+            user=User.objects.only("is_guest_user").filter(pk=doc.user_id).first(),
             destination_url=doc.url,
             short_code=doc.code,
             created_at=make_aware(created_at),

@@ -35,12 +35,34 @@ class HttpRequestFingerprintParser:
             self.request.META.get("HTTP_USER_AGENT", "")
         )
 
+        # Determine device type
+        # Mobile devices have 'dist' key (iPhone, Android, iPad)
+        # Desktop devices don't have 'dist', use platform info instead
+        device_type = None
+        if "dist" in user_agent:
+            dist_name = user_agent["dist"].get("name", "")
+            if dist_name:
+                dist_name_lower = dist_name.lower()
+                if "iphone" in dist_name_lower:
+                    device_type = "Mobile"
+                elif "ipad" in dist_name_lower:
+                    device_type = "Tablet"
+                elif "android" in dist_name_lower:
+                    device_type = "Mobile"
+                else:
+                    device_type = dist_name
+        else:
+            # Desktop devices - check platform
+            platform = user_agent.get("platform", {}).get("name", "")
+            if platform:
+                device_type = "Desktop"
+
         return {
             "ip_address": self.get_ip_address(),
-            "user_agent": self.request.META.get("HTTP_USER_AGENT", "Unknown"),
-            "browser_name": user_agent.get("browser", {}).get("name", "Unknown"),
-            "browser_version": user_agent.get("browser", {}).get("version", "Unknown"),
-            "os": user_agent.get("os", {}).get("name", "Unknown"),
-            "device_type": user_agent.get("dist", {}).get("name", "Unknown"),
-            "referrer": self.request.META.get("HTTP_REFERER", "Unknown"),
+            "user_agent": self.request.META.get("HTTP_USER_AGENT", ""),
+            "browser_name": user_agent.get("browser", {}).get("name"),
+            "browser_version": user_agent.get("browser", {}).get("version"),
+            "os": user_agent.get("os", {}).get("name"),
+            "device_type": device_type,
+            "referrer": self.request.META.get("HTTP_REFERER", ""),
         }

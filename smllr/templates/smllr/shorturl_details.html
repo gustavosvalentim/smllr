@@ -8,6 +8,36 @@
 <div class="container mx-auto mt-4" x-data="analyticsData()" x-init="init()">
   {% include 'smllr/partials/shorturl_details_pane.html' %}
 
+  <!-- Summary Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+    <div class="flex flex-col border-2 shadow-lg rounded-lg p-4 bg-white">
+      <h3 class="text-sm text-gray-600 mb-2">Total Clicks</h3>
+      <p class="text-3xl font-bold" x-text="totalClicks">0</p>
+    </div>
+    <div class="flex flex-col border-2 shadow-lg rounded-lg p-4 bg-white">
+      <h3 class="text-sm text-gray-600 mb-2">Unique Visitors</h3>
+      <p class="text-3xl font-bold" x-text="uniqueVisitors">0</p>
+    </div>
+    <div class="flex flex-col border-2 shadow-lg rounded-lg p-4 bg-white">
+      <h3 class="text-sm text-gray-600 mb-2">Avg Clicks/Day</h3>
+      <p class="text-3xl font-bold" x-text="avgClicksPerDay">0</p>
+    </div>
+    <div class="flex flex-col border-2 shadow-lg rounded-lg p-4 bg-white">
+      <h3 class="text-sm text-gray-600 mb-2">Peak Hour</h3>
+      <p class="text-3xl font-bold" x-text="formatPeakHour()">N/A</p>
+    </div>
+  </div>
+
+  <!-- Clicks by Day Chart -->
+  <div class="flex flex-col border-2 shadow-lg rounded-lg bg-white mt-4 p-4">
+    <div class="border-b-1 shadow-lg pb-2 mb-4">
+      <h3 class="font-bold text-lg">Clicks Over Time (Last 30 Days)</h3>
+    </div>
+    <div class="h-64">
+      <canvas id="chart-clicks-by-day"></canvas>
+    </div>
+  </div>
+
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
     <div class="flex flex-col border-2 shadow-lg rounded-lg h-96 bg-white">
       <div class="border-b-1 shadow-lg px-4 py-2 mb-2">
@@ -17,19 +47,23 @@
         <table class="mx-auto text-left w-full">
           <thead class="border-b-1">
             <tr class="bg-muted/50">
-              <th class="px-6 py-3">Ip address</th>
-              <th class="px-6 py-3">Platform</th>
-              <th class="px-6 py-3">Browser</th>
-              <th class="px-6 py-3">Date</th>
+              <th class="px-4 py-3">IP Address</th>
+              <th class="px-4 py-3">Device</th>
+              <th class="px-4 py-3">Platform</th>
+              <th class="px-4 py-3">Browser</th>
+              <th class="px-4 py-3">Referrer</th>
+              <th class="px-4 py-3">Date</th>
             </tr>
           </thead>
           <tbody>
             <template x-for="click in latestClicks">
               <tr class="hover:bg-muted/30">
-                <td class="px-6 py-3" x-text="click.ip_address" />
-                <td class="px-6 py-3" x-text="click.os" />
-                <td class="px-6 py-3" x-text="click.browser_name" />
-                <td class="px-6 py-3" x-text="click.clicked_at" />
+                <td class="px-4 py-3 text-sm" x-text="click.ip_address" />
+                <td class="px-4 py-3 text-sm" x-text="click.device_type" />
+                <td class="px-4 py-3 text-sm" x-text="click.os" />
+                <td class="px-4 py-3 text-sm" x-text="click.browser" />
+                <td class="px-4 py-3 text-sm truncate max-w-xs" x-text="click.referrer" />
+                <td class="px-4 py-3 text-sm" x-text="click.clicked_at" />
               </tr>
             </template>
           </tbody>
@@ -41,42 +75,93 @@
       <div class="border-b-1 shadow-lg px-4 py-2 mb-2">
         <h3 class="font-bold text-lg">Clicks by source</h3>
       </div>
-      <table class="mx-auto text-left w-full">
-        <thead class="border-b-1">
-          <tr class="bg-muted/50">
-            <th class="px-6 py-3">Source</th>
-            <th class="px-6 py-3">Count</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="hover:bg-muted/30">
-            <td class="px-6 py-3">Instagram</td>
-            <td class="px-6 py-3" x-text="instagramClicks" />
-          </tr>
-          <tr class="hover:bg-muted/30">
-            <td class="px-6 py-3">Facebook</td>
-            <td class="px-6 py-3" x-text="facebookClicks" />
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-y-auto h-full">
+        <table class="mx-auto text-left w-full">
+          <thead class="border-b-1 sticky top-0 bg-white">
+            <tr class="bg-muted/50">
+              <th class="px-6 py-3">Source</th>
+              <th class="px-6 py-3">Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 font-semibold">Direct</td>
+              <td class="px-6 py-3" x-text="directClicks" />
+            </tr>
+            <tr class="bg-gray-50">
+              <td colspan="2" class="px-6 py-2 text-sm font-bold text-gray-700">Social Media</td>
+            </tr>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 pl-12">Facebook</td>
+              <td class="px-6 py-3" x-text="socialMediaClicks.facebook || 0" />
+            </tr>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 pl-12">Instagram</td>
+              <td class="px-6 py-3" x-text="socialMediaClicks.instagram || 0" />
+            </tr>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 pl-12">Twitter</td>
+              <td class="px-6 py-3" x-text="socialMediaClicks.twitter || 0" />
+            </tr>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 pl-12">LinkedIn</td>
+              <td class="px-6 py-3" x-text="socialMediaClicks.linkedin || 0" />
+            </tr>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 pl-12">Reddit</td>
+              <td class="px-6 py-3" x-text="socialMediaClicks.reddit || 0" />
+            </tr>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 pl-12">TikTok</td>
+              <td class="px-6 py-3" x-text="socialMediaClicks.tiktok || 0" />
+            </tr>
+            <tr class="bg-gray-50">
+              <td colspan="2" class="px-6 py-2 text-sm font-bold text-gray-700">Search Engines</td>
+            </tr>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 pl-12">Google</td>
+              <td class="px-6 py-3" x-text="searchEngineClicks.google || 0" />
+            </tr>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 pl-12">Bing</td>
+              <td class="px-6 py-3" x-text="searchEngineClicks.bing || 0" />
+            </tr>
+            <tr class="hover:bg-muted/30">
+              <td class="px-6 py-3 pl-12">Yahoo</td>
+              <td class="px-6 py-3" x-text="searchEngineClicks.yahoo || 0" />
+            </tr>
+            <template x-if="otherReferrers.length > 0">
+              <tr class="bg-gray-50">
+                <td colspan="2" class="px-6 py-2 text-sm font-bold text-gray-700">Other Referrers</td>
+              </tr>
+            </template>
+            <template x-for="referrer in otherReferrers">
+              <tr class="hover:bg-muted/30">
+                <td class="px-6 py-3 pl-12 truncate max-w-xs" x-text="referrer.referrer" />
+                <td class="px-6 py-3" x-text="referrer.clicks" />
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="flex flex-col max-h-140 md:max-h-128 border-2 shadow-lg rounded-lg overflow-y-auto bg-white">
+    <div class="flex flex-col border-2 shadow-lg rounded-lg overflow-y-auto bg-white">
       <div class="border-b-1 shadow-lg px-4 py-2 mb-2">
         <h3 class="font-bold text-lg">Clicks by platform</h3>
       </div>
 
-      <div class="flex flex-col md:flex-row justify-around">
-        <div class="w-full mr-12">
+      <div class="flex flex-col md:flex-row justify-around p-4">
+        <div class="w-full md:w-1/2">
           <ul class="px-4 py-2">
-            <li class="flex justify-between items-center py-2 gap-4">
-              <span>Total</span>
-              <span x-text="totalClicks">0</span>
-            </li>
-
             <li class="flex justify-between items-center py-2 gap-4">
               <span>Windows</span>
               <span x-text="windowsClicks">0</span>
+            </li>
+
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>macOS</span>
+              <span x-text="macosClicks">0</span>
             </li>
 
             <li class="flex justify-between items-center py-2 gap-4">
@@ -88,13 +173,69 @@
               <span>Android</span>
               <span x-text="androidClicks">0</span>
             </li>
+
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>iOS</span>
+              <span x-text="iosClicks">0</span>
+            </li>
+
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>Other</span>
+              <span x-text="otherPlatformClicks">0</span>
+            </li>
           </ul>
         </div>
 
-        <div class="max-w-96 md:mr-12 py-4">
-          <canvas id="chart-click-by-platform" class="max-h-96 mx-auto"></canvas>
+        <div class="w-full md:w-1/2 flex items-center justify-center">
+          <canvas id="chart-click-by-platform" class="max-h-64"></canvas>
         </div>
       </div>
+    </div>
+
+    <div class="flex flex-col border-2 shadow-lg rounded-lg overflow-y-auto bg-white">
+      <div class="border-b-1 shadow-lg px-4 py-2 mb-2">
+        <h3 class="font-bold text-lg">Clicks by device</h3>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-around p-4">
+        <div class="w-full md:w-1/2">
+          <ul class="px-4 py-2">
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>Mobile</span>
+              <span x-text="mobileClicks">0</span>
+            </li>
+
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>Desktop</span>
+              <span x-text="desktopClicks">0</span>
+            </li>
+
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>Tablet</span>
+              <span x-text="tabletClicks">0</span>
+            </li>
+
+            <li class="flex justify-between items-center py-2 gap-4">
+              <span>Other</span>
+              <span x-text="otherDeviceClicks">0</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="w-full md:w-1/2 flex items-center justify-center">
+          <canvas id="chart-clicks-by-device" class="max-h-64"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Browser Analytics -->
+  <div class="flex flex-col border-2 shadow-lg rounded-lg bg-white mt-4 p-4">
+    <div class="border-b-1 shadow-lg pb-2 mb-4">
+      <h3 class="font-bold text-lg">Top Browsers</h3>
+    </div>
+    <div class="h-64">
+      <canvas id="chart-clicks-by-browser"></canvas>
     </div>
   </div>
 </div>

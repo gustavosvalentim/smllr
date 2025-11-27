@@ -68,9 +68,13 @@ class ShortURLFormView(FormView):
 
         if self.request.user.is_anonymous:
             user_ip_address = self.request.fingerprint.ip_address
-            queryset = queryset.filter(user__ip_address=user_ip_address, user__is_anonymous=True)
+            queryset = queryset.filter(
+                user__ip_address=user_ip_address, user__is_guest_user=True
+            )
         else:
-            queryset = queryset.filter(user=self.request.user, user__is_anonymous=False)
+            queryset = queryset.filter(
+                user=self.request.user, user__is_guest_user=False
+            )
 
         paginator = Paginator(queryset, 10)
 
@@ -94,7 +98,9 @@ class ShortURLFormView(FormView):
         try:
             if user.pk is None:
                 user_ip_address = self.request.fingerprint.ip_address
-                queryset = User.objects.filter(ip_address=user_ip_address, is_anonymous=True)
+                queryset = User.objects.filter(
+                    ip_address=user_ip_address, is_guest_user=True
+                )
 
                 if queryset.exists():
                     user = queryset.first()
@@ -115,7 +121,9 @@ class ShortURLFormView(FormView):
         return super().form_valid(form)
 
 
-class ShortURLDetailsView(NonAnonymousUserRequiredMixin, ProSubscriptionRequiredMixin, View):
+class ShortURLDetailsView(
+    NonAnonymousUserRequiredMixin, ProSubscriptionRequiredMixin, View
+):
     """
     View to handle the analytics of short URLs.
     """

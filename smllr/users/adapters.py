@@ -65,7 +65,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
 
         user = sociallogin.user
         user.ip_address = request.fingerprint.fingerprint_data.get("ip_address")
-        user.is_anonymous = False
+        user.is_guest_user = False
         user.set_unusable_password()
         user.save()
         sociallogin.save(request)
